@@ -52,12 +52,12 @@ jobs:
             --build-arg NODE_ENV=production \
             --file ./services/webhook/Dockerfile \
             .
-          docker push ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.GCP_ID }}/webhook-repo/webhook
+          docker push "${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_ID }}/webhook-repo/webhook"
 
       - name: Deploy webhook to Cloud Run
         run: |
           gcloud run deploy webhook \
-            --image ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.GCP_ID }}/webhook-repo/webhook \
+            --image "${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_ID }}/webhook-repo/webhook" \
             --platform managed \
             --region ${{ secrets.GCP_REGION }} \
             --allow-unauthenticated \
@@ -69,12 +69,12 @@ jobs:
             --build-arg NODE_ENV=production \
             --file ./services/trade/Dockerfile \
             .
-          docker push ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.GCP_ID }}/trade-repo/trade
+          docker push "${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_ID }}/trade-repo/trade"
 
       - name: Deploy trade-management to Cloud Run
         run: |
           gcloud run deploy trade \
-            --image ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.GCP_ID }}/trade-repo/trade \
+            --image "${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_ID }}/trade-repo/trade" \
             --platform managed \
             --region ${{ secrets.GCP_REGION }} \
             --allow-unauthenticated \
@@ -86,12 +86,12 @@ jobs:
             --build-arg NODE_ENV=production \
             --file ./frontend/Dockerfile \
             .
-          docker push ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.GCP_ID }}/frontend-repo/frontend
+          docker push "${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_ID }}/frontend-repo/frontend"
 
       - name: Deploy frontend to Cloud Run
         run: |
           gcloud run deploy frontend \
-            --image ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.GCP_ID }}/frontend-repo/frontend \
+            --image "${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_ID }}/frontend-repo/frontend" \
             --platform managed \
             --region ${{ secrets.GCP_REGION }} \
             --allow-unauthenticated \
