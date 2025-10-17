@@ -14,7 +14,7 @@ ENV NODE_ENV=$NODE_ENV
 COPY frontend/package*.json ./
 
 # Install dependencies
-RUN npm install
+RUN npm install --include=dev
 
 # Copy the rest of the application
 COPY frontend/ ./

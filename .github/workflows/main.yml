@@ -52,12 +52,12 @@ jobs:
             --build-arg NODE_ENV=production \
             --file ./services/webhook/Dockerfile \
             .
-          docker push gcr.io/${{ secrets.GCP_ID }}/webhook
+          docker push ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.GCP_ID }}/webhook-repo/webhook
 
       - name: Deploy webhook to Cloud Run
         run: |
           gcloud run deploy webhook \
-            --image gcr.io/${{ secrets.GCP_ID }}/webhook \
+            --image ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.GCP_ID }}/webhook-repo/webhook \
             --platform managed \
             --region ${{ secrets.GCP_REGION }} \
             --allow-unauthenticated \
@@ -69,12 +69,12 @@ jobs:
             --build-arg NODE_ENV=production \
             --file ./services/trade/Dockerfile \
             .
-          docker push gcr.io/${{ secrets.GCP_ID }}/trade
+          docker push ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.GCP_ID }}/trade-repo/trade
 
       - name: Deploy trade-management to Cloud Run
         run: |
           gcloud run deploy trade \
-            --image gcr.io/${{ secrets.GCP_ID }}/trade \
+            --image ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.GCP_ID }}/trade-repo/trade \
             --platform managed \
             --region ${{ secrets.GCP_REGION }} \
             --allow-unauthenticated \
@@ -86,12 +86,12 @@ jobs:
             --build-arg NODE_ENV=production \
             --file ./frontend/Dockerfile \
             .
-          docker push gcr.io/${{ secrets.GCP_ID }}/frontend
+          docker push ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.GCP_ID }}/frontend-repo/frontend
 
       - name: Deploy frontend to Cloud Run
         run: |
           gcloud run deploy frontend \
-            --image gcr.io/${{ secrets.GCP_ID }}/frontend \
+            --image ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.GCP_ID }}/frontend-repo/frontend \
             --platform managed \
             --region ${{ secrets.GCP_REGION }} \
             --allow-unauthenticated \
