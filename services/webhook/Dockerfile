@@ -14,7 +14,7 @@ ENV NODE_ENV=$NODE_ENV
 COPY services/webhook/package*.json ./
 
 # Install dependencies
-RUN npm install
+RUN npm install --include=dev
 
 # Copy the rest of the application
 COPY services/webhook/ ./
@@ -27,9 +27,6 @@ COPY utils/ ./src/utils
 
 # Copy env file
 COPY .env ./
-
-# Install Babel CLI globally
-RUN npm install -g @babel/cli
 
 # Install nodemon
 RUN npm install -g nodemon
