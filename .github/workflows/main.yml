@@ -48,7 +48,7 @@ jobs:
 
       - name: Build and push webhook
         run: |
-          docker build -t gcr.io/${{ secrets.GCP_ID }}/webhook \
+          docker build -t "${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_ID }}/webhook-repo/webhook" \
             --build-arg NODE_ENV=production \
             --file ./services/webhook/Dockerfile \
             .
@@ -65,7 +65,7 @@ jobs:
 
       - name: Build and push trade
         run: |
-          docker build -t gcr.io/${{ secrets.GCP_ID }}/trade \
+          docker build -t "${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_ID }}/trade-repo/trade" \
             --build-arg NODE_ENV=production \
             --file ./services/trade/Dockerfile \
             .
@@ -82,7 +82,7 @@ jobs:
 
       - name: Build and push frontend
         run: |
-          docker build -t gcr.io/${{ secrets.GCP_ID }}/frontend \
+          docker build -t "${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_ID }}/frontend-repo/frontend" \
             --build-arg NODE_ENV=production \
             --file ./frontend/Dockerfile \
             .
