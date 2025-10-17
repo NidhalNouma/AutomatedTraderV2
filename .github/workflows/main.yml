@@ -50,7 +50,7 @@ jobs:
         run: |
           docker build -t gcr.io/${{ secrets.GCP_ID }}/webhook \
             --build-arg NODE_ENV=production \
-            --file ./services/webhook-receiver/Dockerfile \
+            --file ./services/webhook/Dockerfile \
             .
           docker push gcr.io/${{ secrets.GCP_ID }}/webhook
 
