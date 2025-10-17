@@ -1,0 +1,45 @@
+version: '3.8'
+services:
+  webhook:
+    build:
+      context: .
+      dockerfile: services/webhook/Dockerfile
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./services/webhook:/usr/src/app
+      - ./lib:/usr/src/app/src/lib
+      - ./utils:/usr/src/app//src/utils
+      - /usr/src/app/node_modules
+      - ./.env:/usr/src/app/.env
+    environment:
+      - NODE_ENV=development
+  accounts:
+    build:
+      context: .
+      dockerfile: services/accounts/Dockerfile
+    ports:
+      - "4001:4001"
+    volumes:
+      - ./services/accounts:/usr/src/app
+      - ./lib:/usr/src/app/src/lib
+      - ./utils:/usr/src/app/src/utils
+      - /usr/src/app/node_modules
+      - ./.env:/usr/src/app/.env
+    environment:
+      - NODE_ENV=development
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/usr/src/app
+      - ./lib:/usr/src/app/src/lib
+      - ./utils:/usr/src/app/src/utils
+      - /usr/src/app/node_modules
+      - ./.env:/usr/src/app/.env
+    environment:
+      - NODE_ENV=development

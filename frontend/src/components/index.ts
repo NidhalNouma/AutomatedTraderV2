@@ -1,0 +1,17 @@
+// Centralized exports for all major feature components
+export { default as AlertPlaygroundPage } from './AlertPlaygroundPage';
+export { default as AutomateDashboard } from './AutomateDashboard';
+export { default as BrokerConnectionModal } from './AccountConnectionModal';
+export { default as ChartsHubPage } from './ChartsHubPage';
+export { default as ConfigModal } from './ConfigModal';
+export { default as DashboardOverview } from './DashboardOverview';
+export { default as DocumentationPage } from './DocumentationPage';
+export { default as LogsModal } from './LogsModal';
+export { default as MarketplacePage } from './MarketplacePage';
+export { default as QuickCharts } from './QuickCharts';
+export { default as RentSpacePage } from './RentSpacePage';
+export { default as SystemStatusPage } from './SystemStatusPage';
+export { default as TradeHistoryPage } from './TradeHistoryPage';
+export { default as TradesModal } from './TradesModal';
+export { default as TradingChart } from './TradingChart';
+export { default as TradingNewsPage } from './TradingNewsPage';

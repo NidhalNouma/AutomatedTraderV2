@@ -1,0 +1,98 @@
+# Make sure that you have changed the port number in Gcloud if you get an error while deploying the services
+
+name: Deploy to Google Cloud Run
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v1
+
+      - id: "auth"
+        uses: "google-github-actions/auth@v2"
+        with:
+          project_id: ${{ secrets.GCP_ID }}
+          credentials_json: "${{ secrets.GCP_SA_KEY }}"
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: ${{ secrets.GCP_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
+
+      - name: Configure Docker
+        run: gcloud auth configure-docker
+
+      - name: Create .env file
+        run: |
+          echo "NEXT_PUBLIC_LANDING_URL=${{ secrets.NEXT_PUBLIC_LANDING_URL }}" >> .env
+          echo "NEXT_PUBLIC_FIREBASE_API_KEY=${{ secrets.NEXT_PUBLIC_FIREBASE_API_KEY }}" >> .env
+          echo "NEXT_PUBLIC_META_API_TOKEN=${{ secrets.NEXT_PUBLIC_META_API_TOKEN }}" >> .env
+          echo "NEXT_PUBLIC_WEBHOOK_URL=${{ secrets.NEXT_PUBLIC_WEBHOOK_URL }}" >> .env
+          echo "NEXT_PUBLIC_ACCOUNTS_URL=${{ secrets.NEXT_PUBLIC_ACCOUNTS_URL }}" >> .env
+          echo "NEXT_PUBLIC_PUBLIC_WEBHOOK_URL=${{ secrets.NEXT_PUBLIC_PUBLIC_WEBHOOK_URL }}" >> .env
+          echo "NEXT_PUBLIC_PUBLIC_ACCOUNTS_URL=${{ secrets.NEXT_PUBLIC_PUBLIC_ACCOUNTS_URL }}" >> .env
+          echo "NEXT_PUBLIC_WHOP_APP_ID=${{ secrets.NEXT_PUBLIC_WHOP_APP_ID }}" >> .env
+          echo "NEXT_PUBLIC_WHOP_COMPANY_ID=${{ secrets.NEXT_PUBLIC_WHOP_COMPANY_ID }}" >> .env
+
+      - name: Build and push webhook
+        run: |
+          docker build -t gcr.io/${{ secrets.GCP_ID }}/webhook \
+            --build-arg NODE_ENV=production \
+            --file ./services/webhook-receiver/Dockerfile \
+            .
+          docker push gcr.io/${{ secrets.GCP_ID }}/webhook
+
+      - name: Deploy webhook to Cloud Run
+        run: |
+          gcloud run deploy webhook \
+            --image gcr.io/${{ secrets.GCP_ID }}/webhook \
+            --platform managed \
+            --region ${{ secrets.GCP_REGION }} \
+            --allow-unauthenticated \
+            --project ${{ secrets.GCP_ID }}
+
+      - name: Build and push trade
+        run: |
+          docker build -t gcr.io/${{ secrets.GCP_ID }}/trade \
+            --build-arg NODE_ENV=production \
+            --file ./services/trade/Dockerfile \
+            .
+          docker push gcr.io/${{ secrets.GCP_ID }}/trade
+
+      - name: Deploy trade-management to Cloud Run
+        run: |
+          gcloud run deploy trade \
+            --image gcr.io/${{ secrets.GCP_ID }}/trade \
+            --platform managed \
+            --region ${{ secrets.GCP_REGION }} \
+            --allow-unauthenticated \
+            --project ${{ secrets.GCP_ID }}
+
+      - name: Build and push frontend
+        run: |
+          docker build -t gcr.io/${{ secrets.GCP_ID }}/frontend \
+            --build-arg NODE_ENV=production \
+            --file ./frontend/Dockerfile \
+            .
+          docker push gcr.io/${{ secrets.GCP_ID }}/frontend
+
+      - name: Deploy frontend to Cloud Run
+        run: |
+          gcloud run deploy frontend \
+            --image gcr.io/${{ secrets.GCP_ID }}/frontend \
+            --platform managed \
+            --region ${{ secrets.GCP_REGION }} \
+            --allow-unauthenticated \
+            --project ${{ secrets.GCP_ID }}
