@@ -56,7 +56,8 @@ jobs:
             --platform managed \
             --region ${{ secrets.GCP_REGION }} \
             --allow-unauthenticated \
-            --project ${{ secrets.GCP_ID }}
+            --project ${{ secrets.GCP_ID }} \
+            --port 4000
 
       - name: Build and push trade
         run: |
@@ -73,7 +74,8 @@ jobs:
             --platform managed \
             --region ${{ secrets.GCP_REGION }} \
             --allow-unauthenticated \
-            --project ${{ secrets.GCP_ID }}
+            --project ${{ secrets.GCP_ID }} \
+            --port 4001
 
       - name: Build and push frontend
         run: |
@@ -90,4 +92,5 @@ jobs:
             --platform managed \
             --region ${{ secrets.GCP_REGION }} \
             --allow-unauthenticated \
-            --project ${{ secrets.GCP_ID }}
+            --project ${{ secrets.GCP_ID }} \
+            --port 3000
