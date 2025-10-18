@@ -154,7 +154,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           </div>
           <div className="flex items-center justify-between text-xs">
             <span className="text-gray-500">Today's P&L</span>
-            <span className="text-success-400 font-medium">+$156</span>
+            <span className="text-success-400 font-medium">0</span>
           </div>
         </div>
       </div>
