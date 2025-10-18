@@ -63,11 +63,11 @@ jobs:
         run: |
           docker build -t "${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_ID }}/trade-repo/trade" \
             --build-arg NODE_ENV=production \
-            --file ./services/trade/Dockerfile \
+            --file ./services/accounts/Dockerfile \
             .
           docker push "${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_ID }}/trade-repo/trade"
 
-      - name: Deploy trade-management to Cloud Run
+      - name: Deploy trade to Cloud Run
         run: |
           gcloud run deploy trade \
             --image "${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_ID }}/trade-repo/trade" \
