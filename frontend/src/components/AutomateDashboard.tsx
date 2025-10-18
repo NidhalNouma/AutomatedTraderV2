@@ -34,7 +34,7 @@ import AccountConnectionModal from "./AccountConnectionModal";
 import LogsModal from "./LogsModal";
 import TradesModal from "./TradesModal";
 import ConfigModal from "./ConfigModal";
-import { WEBHOOK_BASE_URL } from "@/utils/constants";
+import { servicesURL } from "@/utils";
 import { getBannersByCategory, getBannerById, Banner } from "../hooks/banners";
 import { useBanner } from "../hooks/useBanner";
 
@@ -100,7 +100,7 @@ const AutomateDashboard: React.FC = () => {
   const ButtonIcon = currentBannerData?.buttonIcon || Zap;
 
   const copyWebhookUrl = async (customId: string) => {
-    const webhookUrl = `${WEBHOOK_BASE_URL}${customId}`;
+    const webhookUrl = `${servicesURL.publicWebhook}${customId}`;
     try {
       await navigator.clipboard.writeText(webhookUrl);
       setCopiedWebhook(customId);
@@ -389,7 +389,7 @@ const AutomateDashboard: React.FC = () => {
                     </div>
                     <div className="bg-black/40 rounded-lg p-3 flex items-center gap-2">
                       <code className="flex-1 text-xs text-gray-400 font-mono truncate">
-                        {WEBHOOK_BASE_URL}
+                        {servicesURL.publicWebhook}
                         {account.webhookPath}
                       </code>
                       <button
@@ -606,7 +606,7 @@ const AutomateDashboard: React.FC = () => {
                         <span className="text-red-400 mt-1">•</span>
                         <span className="text-yellow-300">
                           <strong>Webhook URL:</strong> Your webhook URL (
-                          {WEBHOOK_BASE_URL}
+                          {servicesURL.publicWebhook}
                           {accountToDelete.customId}) will stop working
                         </span>
                       </div>

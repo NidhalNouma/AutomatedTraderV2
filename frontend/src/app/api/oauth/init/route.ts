@@ -1,5 +1,5 @@
 import { whopApi } from "@/lib/whop-sdk";
-import { APP_BASE_URL } from "@/utils";
+import { servicesURL } from "@/utils";
 
 
 export function GET(request: Request): Response {
@@ -8,7 +8,7 @@ export function GET(request: Request): Response {
 
   const { url: authUrl, state }: { url: string; state: string } = whopApi.oauth.getAuthorizationUrl({
     // This has to be defined in the redirect uris outlined in step 1.2
-    redirectUri: `${APP_BASE_URL}/api/oauth/callback`,
+    redirectUri: `${servicesURL.publicFrontend}/api/oauth/callback`,
     // These are the authorization scopes you want to request from the user.
     scope: ["read_user"],
   });

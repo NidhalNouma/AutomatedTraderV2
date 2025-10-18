@@ -1,7 +1,6 @@
-export const APP_BASE_URL = 'http://localhost:3000'
-export const WEBHOOK_BASE_URL = 'https://webhook.automatedtrader.com/';
 
 export const servicesURL = {
+  publicFrontend: process.env.NEXT_PUBLIC_PUBLIC_FRONTEND_URL,
   webhook: process.env.NEXT_PUBLIC_WEBHOOK_URL,
   publicWebhook: process.env.NEXT_PUBLIC_PUBLIC_WEBHOOK_URL,
   accounts: process.env.NEXT_PUBLIC_ACCOUNTS_URL,

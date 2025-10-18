@@ -1,5 +1,5 @@
 import { whopApi } from "@/lib/whop-sdk";
-import { APP_BASE_URL } from "@/utils";
+import { servicesURL } from "@/utils";
 
 
 export async function GET(request: Request) {
@@ -31,7 +31,7 @@ export async function GET(request: Request) {
   // exchange the code for a token
   const authResponse = await whopApi.oauth.exchangeCode({
     code,
-    redirectUri: `${APP_BASE_URL}/api/oauth/callback`,
+    redirectUri: `${servicesURL.publicFrontend}/api/oauth/callback`,
   });
 
     console.log(code, authResponse)
@@ -43,7 +43,7 @@ export async function GET(request: Request) {
 
   // Restore the `next` parameter from the state cookie set in the previous step.
   const next = decodeURIComponent(stateCookie.split("=")[1]);
-  const nextUrl = new URL(next, APP_BASE_URL);
+  const nextUrl = new URL(next, servicesURL.publicFrontend);
 
   // This is an example, you should not store the plain user auth token in a cookie in production.
 
