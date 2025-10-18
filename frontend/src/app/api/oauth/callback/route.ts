@@ -9,13 +9,15 @@ export async function GET(request: Request) {
     
 
   if (!code) {
+    console.log("Missing code parameter");
     // redirect to error page
-    return Response.redirect("/oauth/error?error=missing_code");
+    return Response.redirect("/?error=missing_code");
   }
 
   if (!state) {
+    console.log("Missing state parameter");
     // redirect to error page
-    return Response.redirect("/oauth/error?error=missing_state");
+    return Response.redirect("/?error=missing_state");
   }
 
   const stateCookie = request.headers
@@ -24,8 +26,9 @@ export async function GET(request: Request) {
     .find((cookie) => cookie.trim().startsWith(`oauth-state.${state}=`));
 
   if (!stateCookie) {
+    console.log("Missing state cookie");
     // redirect to error page
-    return Response.redirect("/oauth/error?error=invalid_state");
+    return Response.redirect("/?error=invalid_state");
   }
 
   // exchange the code for a token
@@ -34,8 +37,9 @@ export async function GET(request: Request) {
     redirectUri: `${servicesURL.publicFrontend}/api/oauth/callback`,
   });
 
-    console.log(code, authResponse)
+    // console.log(code, authResponse)
   if (!authResponse.ok) {
+    console.log("Failed to exchange code for token", authResponse);
     return Response.redirect("/oauth/error?error=code_exchange_failed");
   }
 
