@@ -11,7 +11,7 @@ ARG NODE_ENV
 ENV NODE_ENV=$NODE_ENV
 
 # Copy package.json and package-lock.json
-COPY services/webhook/package*.json ./
+COPY services/accounts/package*.json ./
 
 # Install dependencies
 RUN npm install --include=dev
