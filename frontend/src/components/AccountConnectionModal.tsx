@@ -56,9 +56,18 @@ const AccountConnectionModal: React.FC<BrokerConnectionModalProps> = ({
     type: "S" as "S" | "D",
   });
 
-  const cryptoBrokers = [];
+  interface BrokerAccountType {
+    id: string;
+    name: string;
+    logo: string;
+    color: string;
+    popular?: boolean;
+    category?: "crypto" | "forex";
+  }
 
-  const forexBrokers = [
+  const cryptoBrokers: BrokerAccountType[] = [];
+
+  const forexBrokers: BrokerAccountType[] = [
     {
       id: "tradelocker",
       name: "TradeLocker",
@@ -68,7 +77,7 @@ const AccountConnectionModal: React.FC<BrokerConnectionModalProps> = ({
     },
   ];
 
-  const comingSoonBrokers = [
+  const comingSoonBrokers: BrokerAccountType[] = [
     {
       id: "metatrader4",
       name: "MetaTrader 4",

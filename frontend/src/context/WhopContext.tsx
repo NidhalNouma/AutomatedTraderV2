@@ -37,21 +37,27 @@ export const WhopProvider: React.FC<WhopProviderProps> = ({
     try {
       console.log("Verifying user token...", whopApi);
       const { userId } = await whopApi.verifyUserToken(accessToken);
-      let user = await whopApi.users.getUser({ userId });
+      const whopUser = await whopApi.users.getUser({ userId });
 
-      if (!user) {
+      if (!whopUser) {
         router.push("/"); // Redirect if user not found
         return;
       }
 
+      let user: any = { ...whopUser };
+
       const response = await whopApi.access.checkIfUserHasAccessToCompany({
-        companyId,
+        companyId: companyId!,
         userId,
       });
 
-      // console.log(response, response.hasAccess);
+      console.log(response, response.hasAccess);
 
-      user = { ...user, hasAccess: response.hasAccess };
+      user = {
+        ...user,
+        hasAccess: response.hasAccess ?? false,
+        accessType: response.accessLevel || null,
+      };
 
       const dbUser = await getOrCreateUser(userId);
       setWhopUser(user);
