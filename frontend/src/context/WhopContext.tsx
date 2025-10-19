@@ -1,5 +1,5 @@
 "use client";
-import { whopApi } from "@/lib/whop-sdk";
+import { whopApi, companyId } from "@/lib/whop-sdk";
 import { getOrCreateUser } from "@/lib/user-db";
 import { useRouter } from "next/navigation";
 
@@ -35,19 +35,23 @@ export const WhopProvider: React.FC<WhopProviderProps> = ({
 
   async function getWhopUser() {
     try {
+      console.log("Verifying user token...", whopApi);
       const { userId } = await whopApi.verifyUserToken(accessToken);
-      const user = await whopApi.users.getUser({ userId });
-
-      // const checkAccess = await client.users.checkAccess("resource_id", {
-      //   id: userId,
-      // });
-
-      console.log(response.access_level);
+      let user = await whopApi.users.getUser({ userId });
 
       if (!user) {
         router.push("/"); // Redirect if user not found
         return;
       }
+
+      const response = await whopApi.access.checkIfUserHasAccessToCompany({
+        companyId,
+        userId,
+      });
+
+      // console.log(response, response.hasAccess);
+
+      user = { ...user, hasAccess: response.hasAccess };
 
       const dbUser = await getOrCreateUser(userId);
       setWhopUser(user);

@@ -16,7 +16,7 @@ export function useTrades(accountId:string) {
 
     const cTrades = await getTradesByUserAndAccount(whopUser.id, accountId)
 
-  console.log("trades", trades);
+  // console.log("trades", trades);
     setTrades(cTrades)
     setIsLoading(false)
   }
@@ -41,7 +41,7 @@ export function useTrades(accountId:string) {
         100
       : 0;
 
-    console.log(totalPnL, trades)
+    // console.log(totalPnL, trades)
 
   return {
     trades,

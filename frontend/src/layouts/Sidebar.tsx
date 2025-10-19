@@ -199,9 +199,11 @@ const Sidebar: React.FC<SidebarProps> = ({
               <div className="text-white font-medium text-sm truncate">
                 {whopUser.name}
               </div>
-              <div className="text-xs text-yellow-400 font-medium">
-                LIFETIME
-              </div>
+              {whopUser.hasAccess && (
+                <div className="text-xs text-yellow-400 font-medium">
+                  LIFETIME
+                </div>
+              )}
               <div className="text-xs text-gray-500 truncate">
                 {whopUser.username}
               </div>
