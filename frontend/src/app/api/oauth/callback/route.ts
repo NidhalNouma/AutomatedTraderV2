@@ -39,13 +39,13 @@ export async function GET(request: Request) {
     });
 
     if (!authResponse.ok) {
-      const errorText = await authResponse.text?.().catch(() => "No body text");
+      const errorText = await authResponse.raw.text().catch(() => "No body text");
       console.error("WHOP exchange failed:", {
-        status: authResponse.status,
-        statusText: authResponse.statusText,
+        status: authResponse.code,
+        statusText: authResponse.raw.statusText,
         errorText,
       });
-      return Response.redirect(`/?error=code_exchange_failed&reason=${encodeURIComponent(authResponse.statusText)}`);
+      return Response.redirect(`/?error=code_exchange_failed&reason=${encodeURIComponent(authResponse.raw.statusText)}`);
     }
 
     const { access_token } = authResponse.tokens;
