@@ -32,16 +32,21 @@ export async function GET(request: Request) {
   }
 
   // exchange the code for a token
-  const authResponse = await whopApi.oauth.exchangeCode({
-    code,
-    redirectUri: `${servicesURL.publicFrontend}/api/oauth/callback`,
-  });
 
-    // console.log(code, authResponse)
-  if (!authResponse.ok) {
-    console.log("Failed to exchange code for token", authResponse);
-    return Response.redirect("/oauth/error?error=code_exchange_failed");
-  }
+    const authResponse = await whopApi.oauth.exchangeCode({
+      code,
+      redirectUri: `${servicesURL.publicFrontend}/api/oauth/callback`,
+    });
+
+    if (!authResponse.ok) {
+      const errorText = await authResponse.text?.().catch(() => "No body text");
+      console.error("WHOP exchange failed:", {
+        status: authResponse.status,
+        statusText: authResponse.statusText,
+        errorText,
+      });
+      return Response.redirect(`/?error=code_exchange_failed&reason=${encodeURIComponent(authResponse.statusText)}`);
+    }
 
     const { access_token } = authResponse.tokens;
 
