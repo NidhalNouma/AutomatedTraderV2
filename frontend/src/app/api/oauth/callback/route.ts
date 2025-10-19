@@ -61,7 +61,7 @@ const response = new Response(null, {
   status: 302,
   headers: {
     Location: nextUrl.toString(),
-    "Set-Cookie": `whop_access_token=${access_token}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=86400`,
+    "Set-Cookie": `whop_access_token=${access_token}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=604800`,
   },
 });
 

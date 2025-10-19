@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import {
   X,
   TrendingUp,
@@ -7,7 +7,9 @@ import {
   Download,
   ArrowUpRight,
   ArrowDownRight,
+  MoveVertical,
 } from "lucide-react";
+
 import { Card, Button } from "../ui";
 import { formatCurrency, formatDateTime } from "@/utils";
 import { useTrades } from "@/hooks";
@@ -194,79 +196,7 @@ const TradesModal: React.FC<TradesModalProps> = ({
                 </thead>
                 <tbody>
                   {filteredTrades.map((trade) => (
-                    <tr
-                      key={trade.id}
-                      className="border-b border-gray-800/20 hover:bg-gray-800/20 transition-all"
-                    >
-                      <td className="p-4">
-                        <span className="font-medium text-white">
-                          {trade.symbol}
-                        </span>
-                      </td>
-                      <td className="p-4">
-                        <div
-                          className={`flex items-center gap-2 ${
-                            trade.side?.toLowerCase() === "buy"
-                              ? "text-green-400"
-                              : "text-red-400"
-                          }`}
-                        >
-                          {trade.side?.toLowerCase() === "buy" ? (
-                            <ArrowUpRight className="h-4 w-4" />
-                          ) : (
-                            <ArrowDownRight className="h-4 w-4" />
-                          )}
-                          <span className="font-medium capitalize">
-                            {trade.side?.toUpperCase()}
-                          </span>
-                        </div>
-                      </td>
-                      <td className="p-4 text-white">{trade.volume}</td>
-                      <td className="p-4 text-white">{trade.entryPrice}</td>
-                      <td className="p-4 text-white">
-                        {trade.exitPrice && trade.status == "closed"
-                          ? trade.exitPrice
-                          : "-"}
-                      </td>
-                      <td className="p-4">
-                        <span
-                          className={`font-medium ${
-                            (trade.pnl ?? 0) > 0
-                              ? "text-green-400"
-                              : (trade.pnl ?? 0) < 0
-                              ? "text-red-400"
-                              : "text-white"
-                          }`}
-                        >
-                          {(trade.pnl ?? 0) > 0 ? "+" : ""}
-                          {formatCurrency(trade.pnl ?? 0)}
-                        </span>
-                      </td>
-                      <td className="p-4">
-                        <span
-                          className={`px-3 py-1 rounded-full text-xs font-medium ${
-                            trade.status === "open"
-                              ? "bg-blue-500/20 text-blue-300"
-                              : "bg-gray-500/20 text-gray-300"
-                          }`}
-                        >
-                          {trade.status}
-                        </span>
-                      </td>
-                      <td className="p-4">
-                        <span className="text-gray-300 text-sm bg-gray-800/50 px-2 py-1 rounded">
-                          {trade.source ? trade.source : "NA"}
-                        </span>
-                      </td>
-                      <td className="p-4 text-gray-400 text-sm">
-                        <div>{formatDateTime(trade.entryTime)}</div>
-                        {trade.closeTime && trade.status == "closed" && (
-                          <div className="text-xs text-gray-500">
-                            Closed: {formatDateTime(trade.closeTime)}
-                          </div>
-                        )}
-                      </td>
-                    </tr>
+                    <Row key={trade.id} trade={trade} />
                   ))}
                 </tbody>
               </table>
@@ -279,3 +209,142 @@ const TradesModal: React.FC<TradesModalProps> = ({
 };
 
 export default TradesModal;
+
+function Row({ trade }: { trade: any }) {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  return (
+    <Fragment>
+      <tr
+        key={trade.id}
+        onClick={() => setIsExpanded(!isExpanded)}
+        className="border-b border-gray-800/20 hover:bg-gray-800/20 transition-all"
+      >
+        <td className="p-4">
+          <span className="font-medium text-white">{trade.symbol}</span>
+        </td>
+        <td className="p-4">
+          <div
+            className={`flex items-center gap-2 ${
+              trade.side?.toLowerCase() === "buy"
+                ? "text-green-400"
+                : "text-red-400"
+            }`}
+          >
+            {trade.side?.toLowerCase() === "buy" ? (
+              <ArrowUpRight className="h-4 w-4" />
+            ) : (
+              <ArrowDownRight className="h-4 w-4" />
+            )}
+            <span className="font-medium capitalize">
+              {trade.side?.toUpperCase()}
+            </span>
+          </div>
+        </td>
+        <td className="p-4 text-white">{trade.volume}</td>
+        <td className="p-4 text-white">{trade.entryPrice}</td>
+        <td className="p-4 text-white">
+          {trade.exitPrice && trade.status == "closed" ? trade.exitPrice : "-"}
+        </td>
+        <td className="p-4">
+          <span
+            className={`font-medium ${
+              (trade.pnl ?? 0) > 0
+                ? "text-green-400"
+                : (trade.pnl ?? 0) < 0
+                ? "text-red-400"
+                : "text-white"
+            }`}
+          >
+            {(trade.pnl ?? 0) > 0 ? "+" : ""}
+            {formatCurrency(trade.pnl ?? 0)}
+          </span>
+        </td>
+        <td className="p-4">
+          <span
+            className={`px-3 py-1 rounded-full text-xs font-medium ${
+              trade.status === "open"
+                ? "bg-blue-500/20 text-blue-300"
+                : "bg-gray-500/20 text-gray-300"
+            }`}
+          >
+            {trade.status}
+          </span>
+        </td>
+        <td className="p-4">
+          <span className="text-gray-300 text-sm bg-gray-800/50 px-2 py-1 rounded">
+            {trade.source ? trade.source : "NA"}
+          </span>
+        </td>
+        <td className="p-4 text-gray-400 text-sm">
+          <div>{formatDateTime(trade.entryTime)}</div>
+          {trade.closeTime && trade.status == "closed" && (
+            <div className="text-xs text-gray-500">
+              Closed: {formatDateTime(trade.closeTime)}
+            </div>
+          )}
+        </td>
+        {/* <td className="p-0">
+          {trade.closedTrades && trade.closedTrades.length > 0 && (
+            <MoveVertical
+              className={`h-5 w-5 mt-2 ml-1 inline cursor-pointer ${
+                isExpanded ? "transform rotate-180" : ""
+              }`}
+            />
+          )}
+        </td> */}
+      </tr>
+
+      {isExpanded &&
+        trade.closedTrades &&
+        trade.closedTrades.length > 0 &&
+        trade.closedTrades.map((ct: any, idx: number) => (
+          <tr key={idx} className="">
+            <Fragment>
+              <td colSpan={2} className="p-4"></td>
+
+              <td className="p-4 text-white">{trade.volume}</td>
+              <td colSpan={1} className="p-4">
+                {trade.entryPrice}
+              </td>
+              <td className="p-4 text-white">{ct.exitPrice}</td>
+
+              <td className="p-4">
+                <span
+                  className={`font-medium ${
+                    (ct.pnl ?? 0) > 0
+                      ? "text-green-400"
+                      : (trade.pnl ?? 0) < 0
+                      ? "text-red-400"
+                      : "text-white"
+                  }`}
+                >
+                  {(ct.pnl ?? 0) > 0 ? "+" : ""}
+                  {formatCurrency(ct.pnl ?? 0)}
+                </span>
+              </td>
+
+              <td className="p-4">
+                <span
+                  className={`px-3 py-1 rounded-full text-xs font-medium bg-gray-500/20 text-gray-300`}
+                >
+                  closed
+                </span>
+              </td>
+              <td className="p-4">
+                <span className="text-gray-300 text-sm bg-gray-800/50 px-2 py-1 rounded">
+                  {trade.source ? trade.source : "NA"}
+                </span>
+              </td>
+              <td className="p-4 text-gray-400 text-sm">
+                <div>{formatDateTime(trade.entryTime)}</div>
+                <div className="text-xs text-gray-500">
+                  Closed: {formatDateTime(ct.closeTime)}
+                </div>
+              </td>
+            </Fragment>
+          </tr>
+        ))}
+    </Fragment>
+  );
+}

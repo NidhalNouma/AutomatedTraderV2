@@ -56,7 +56,83 @@ const AccountConnectionModal: React.FC<BrokerConnectionModalProps> = ({
     type: "S" as "S" | "D",
   });
 
-  const cryptoBrokers = [
+  const cryptoBrokers = [];
+
+  const forexBrokers = [
+    {
+      id: "tradelocker",
+      name: "TradeLocker",
+      logo: "TL",
+      color: "bg-gray-700",
+      popular: false,
+    },
+  ];
+
+  const comingSoonBrokers = [
+    {
+      id: "metatrader4",
+      name: "MetaTrader 4",
+      logo: "MT4",
+      color: "bg-blue-800",
+      popular: true,
+    },
+    {
+      id: "metatrader5",
+      name: "MetaTrader 5",
+      logo: "MT5",
+      color: "bg-blue-900",
+      popular: true,
+    },
+    {
+      id: "kraken",
+      name: "Kraken",
+      logo: "KR",
+      color: "bg-purple-700",
+      category: "crypto",
+    },
+    {
+      id: "okx",
+      name: "OKX",
+      logo: "OKX",
+      color: "bg-black",
+      category: "crypto",
+    },
+    {
+      id: "bitmex",
+      name: "BitMEX",
+      logo: "BMX",
+      color: "bg-orange-600",
+      category: "crypto",
+    },
+    {
+      id: "tradestation",
+      name: "TradeStation",
+      logo: "TS",
+      color: "bg-blue-700",
+      category: "forex",
+    },
+    {
+      id: "acttrader",
+      name: "ActTrader",
+      logo: "ACT",
+      color: "bg-green-700",
+      category: "forex",
+    },
+    {
+      id: "dxtrade",
+      name: "DXTrade",
+      logo: "DX",
+      color: "bg-red-700",
+      category: "forex",
+    },
+    {
+      id: "ninjatrader",
+      name: "NinjaTrader",
+      logo: "NT",
+      color: "bg-indigo-700",
+      category: "forex",
+    },
+
     {
       id: "binance",
       name: "Binance",
@@ -126,82 +202,6 @@ const AccountConnectionModal: React.FC<BrokerConnectionModalProps> = ({
       logo: "CB",
       color: "bg-blue-500",
       popular: false,
-    },
-  ];
-
-  const forexBrokers = [
-    {
-      id: "metatrader4",
-      name: "MetaTrader 4",
-      logo: "MT4",
-      color: "bg-blue-800",
-      popular: true,
-    },
-    {
-      id: "metatrader5",
-      name: "MetaTrader 5",
-      logo: "MT5",
-      color: "bg-blue-900",
-      popular: true,
-    },
-    {
-      id: "tradelocker",
-      name: "TradeLocker",
-      logo: "TL",
-      color: "bg-gray-700",
-      popular: false,
-    },
-  ];
-
-  const comingSoonBrokers = [
-    {
-      id: "kraken",
-      name: "Kraken",
-      logo: "KR",
-      color: "bg-purple-700",
-      category: "crypto",
-    },
-    {
-      id: "okx",
-      name: "OKX",
-      logo: "OKX",
-      color: "bg-black",
-      category: "crypto",
-    },
-    {
-      id: "bitmex",
-      name: "BitMEX",
-      logo: "BMX",
-      color: "bg-orange-600",
-      category: "crypto",
-    },
-    {
-      id: "tradestation",
-      name: "TradeStation",
-      logo: "TS",
-      color: "bg-blue-700",
-      category: "forex",
-    },
-    {
-      id: "acttrader",
-      name: "ActTrader",
-      logo: "ACT",
-      color: "bg-green-700",
-      category: "forex",
-    },
-    {
-      id: "dxtrade",
-      name: "DXTrade",
-      logo: "DX",
-      color: "bg-red-700",
-      category: "forex",
-    },
-    {
-      id: "ninjatrader",
-      name: "NinjaTrader",
-      logo: "NT",
-      color: "bg-indigo-700",
-      category: "forex",
     },
   ];
 
@@ -383,128 +383,136 @@ const AccountConnectionModal: React.FC<BrokerConnectionModalProps> = ({
               </p>
 
               {/* Crypto Brokers */}
-              <div className="mb-8">
-                <h4 className="text-lg font-semibold text-white mb-4 flex items-center gap-3">
-                  <div className="w-6 h-6 bg-yellow-500 rounded-lg flex items-center justify-center">
-                    <span className="text-white font-bold text-sm">₿</span>
-                  </div>
-                  Cryptocurrency Exchanges
-                  <span className="text-sm text-gray-400 font-normal">
-                    ({cryptoBrokers.length} available)
-                  </span>
-                </h4>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                  {cryptoBrokers.map((broker) => (
-                    <button
-                      key={broker.id}
-                      onClick={() => {
-                        setSelectedBroker(broker.id as BrokerType);
-                        setStep(2);
-                      }}
-                      className="flex items-center gap-3 p-4 bg-gradient-to-r from-gray-900/60 to-gray-800/40 hover:from-blue-600/20 hover:to-purple-600/20 border border-gray-700/50 hover:border-blue-500/40 rounded-xl transition-all hover:scale-[1.02] group relative"
-                    >
-                      {broker.popular && (
-                        <div className="absolute -top-2 -right-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-xs px-2 py-1 rounded-full font-medium">
-                          Popular
-                        </div>
-                      )}
-                      <div
-                        className={`w-12 h-12 ${broker.color} rounded-xl flex items-center justify-center text-white font-bold shadow-lg flex-shrink-0`}
+              {cryptoBrokers.length > 0 && (
+                <div className="mb-8">
+                  <h4 className="text-lg font-semibold text-white mb-4 flex items-center gap-3">
+                    <div className="w-6 h-6 bg-yellow-500 rounded-lg flex items-center justify-center">
+                      <span className="text-white font-bold text-sm">₿</span>
+                    </div>
+                    Cryptocurrency Exchanges
+                    <span className="text-sm text-gray-400 font-normal">
+                      ({cryptoBrokers.length} available)
+                    </span>
+                  </h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {cryptoBrokers.map((broker) => (
+                      <button
+                        key={broker.id}
+                        onClick={() => {
+                          setSelectedBroker(broker.id as BrokerType);
+                          setStep(2);
+                        }}
+                        className="flex items-center gap-3 p-4 bg-gradient-to-r from-gray-900/60 to-gray-800/40 hover:from-blue-600/20 hover:to-purple-600/20 border border-gray-700/50 hover:border-blue-500/40 rounded-xl transition-all hover:scale-[1.02] group relative"
                       >
-                        {broker.logo}
-                      </div>
-                      <div className="text-left flex-1">
-                        <div className="font-semibold text-white group-hover:text-blue-300 transition-colors">
-                          {broker.name}
+                        {broker.popular && (
+                          <div className="absolute -top-2 -right-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-xs px-2 py-1 rounded-full font-medium">
+                            Popular
+                          </div>
+                        )}
+                        <div
+                          className={`w-12 h-12 ${broker.color} rounded-xl flex items-center justify-center text-white font-bold shadow-lg flex-shrink-0`}
+                        >
+                          {broker.logo}
                         </div>
-                        <div className="text-xs text-gray-400">
-                          Crypto Exchange
+                        <div className="text-left flex-1">
+                          <div className="font-semibold text-white group-hover:text-blue-300 transition-colors">
+                            {broker.name}
+                          </div>
+                          <div className="text-xs text-gray-400">
+                            Crypto Exchange
+                          </div>
                         </div>
-                      </div>
-                    </button>
-                  ))}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Forex Brokers */}
-              <div className="mb-8">
-                <h4 className="text-lg font-semibold text-white mb-4 flex items-center gap-3">
-                  <div className="w-6 h-6 bg-green-500 rounded-lg flex items-center justify-center">
-                    <span className="text-white font-bold text-sm">💱</span>
-                  </div>
-                  Forex & CFD Brokers
-                  <span className="text-sm text-gray-400 font-normal">
-                    ({forexBrokers.length} available)
-                  </span>
-                </h4>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                  {forexBrokers.map((broker) => (
-                    <button
-                      key={broker.id}
-                      onClick={() => {
-                        setSelectedBroker(broker.id as BrokerType);
-                        setStep(2);
-                      }}
-                      className="flex items-center gap-3 p-4 bg-gradient-to-r from-gray-900/60 to-gray-800/40 hover:from-green-600/20 hover:to-emerald-600/20 border border-gray-700/50 hover:border-green-500/40 rounded-xl transition-all hover:scale-[1.02] group relative"
-                    >
-                      {broker.popular && (
-                        <div className="absolute -top-2 -right-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white text-xs px-2 py-1 rounded-full font-medium">
-                          Popular
-                        </div>
-                      )}
-                      <div
-                        className={`w-12 h-12 ${broker.color} rounded-xl flex items-center justify-center text-white font-bold shadow-lg flex-shrink-0`}
+              {forexBrokers.length > 0 && (
+                <div className="mb-8">
+                  <h4 className="text-lg font-semibold text-white mb-4 flex items-center gap-3">
+                    <div className="w-6 h-6 bg-green-500 rounded-lg flex items-center justify-center">
+                      <span className="text-white font-bold text-sm">💱</span>
+                    </div>
+                    Forex & CFD Brokers
+                    <span className="text-sm text-gray-400 font-normal">
+                      ({forexBrokers.length} available)
+                    </span>
+                  </h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {forexBrokers.map((broker) => (
+                      <button
+                        key={broker.id}
+                        onClick={() => {
+                          setSelectedBroker(broker.id as BrokerType);
+                          setStep(2);
+                        }}
+                        className="flex items-center gap-3 p-4 bg-gradient-to-r from-gray-900/60 to-gray-800/40 hover:from-green-600/20 hover:to-emerald-600/20 border border-gray-700/50 hover:border-green-500/40 rounded-xl transition-all hover:scale-[1.02] group relative"
                       >
-                        {broker.logo}
-                      </div>
-                      <div className="text-left flex-1">
-                        <div className="font-semibold text-white group-hover:text-green-300 transition-colors">
-                          {broker.name}
+                        {broker.popular && (
+                          <div className="absolute -top-2 -right-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white text-xs px-2 py-1 rounded-full font-medium">
+                            Popular
+                          </div>
+                        )}
+                        <div
+                          className={`w-12 h-12 ${broker.color} rounded-xl flex items-center justify-center text-white font-bold shadow-lg flex-shrink-0`}
+                        >
+                          {broker.logo}
                         </div>
-                        <div className="text-xs text-gray-400">
-                          Forex & CFDs
+                        <div className="text-left flex-1">
+                          <div className="font-semibold text-white group-hover:text-green-300 transition-colors">
+                            {broker.name}
+                          </div>
+                          <div className="text-xs text-gray-400">
+                            Forex & CFDs
+                          </div>
                         </div>
-                      </div>
-                    </button>
-                  ))}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Coming Soon */}
-              <div>
-                <h4 className="text-lg font-semibold text-white mb-4 flex items-center gap-3">
-                  <div className="w-6 h-6 bg-purple-500 rounded-lg flex items-center justify-center">
-                    <span className="text-white font-bold text-sm">🚀</span>
-                  </div>
-                  Coming Soon
-                  <span className="text-sm text-gray-400 font-normal">
-                    ({comingSoonBrokers.length} planned)
-                  </span>
-                </h4>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                  {comingSoonBrokers.map((broker) => (
-                    <div
-                      key={broker.id}
-                      className="flex items-center gap-3 p-4 bg-gradient-to-r from-gray-800/30 to-gray-700/20 border border-gray-700/30 rounded-xl opacity-60 cursor-not-allowed relative"
-                    >
-                      <div className="absolute -top-2 -right-2 bg-purple-500 text-white text-xs px-2 py-1 rounded-full font-medium">
-                        Soon
-                      </div>
-                      <div
-                        className={`w-12 h-12 ${broker.color} rounded-xl flex items-center justify-center text-white font-bold shadow-lg flex-shrink-0`}
-                      >
-                        {broker.logo}
-                      </div>
-                      <div className="text-left flex-1">
-                        <div className="font-semibold text-gray-400">
-                          {broker.name}
-                        </div>
-                        <div className="text-xs text-gray-500">Coming Soon</div>
-                      </div>
+              {comingSoonBrokers.length > 0 && (
+                <div>
+                  <h4 className="text-lg font-semibold text-white mb-4 flex items-center gap-3">
+                    <div className="w-6 h-6 bg-purple-500 rounded-lg flex items-center justify-center">
+                      <span className="text-white font-bold text-sm">🚀</span>
                     </div>
-                  ))}
+                    Coming Soon
+                    <span className="text-sm text-gray-400 font-normal">
+                      ({comingSoonBrokers.length} planned)
+                    </span>
+                  </h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {comingSoonBrokers.map((broker) => (
+                      <div
+                        key={broker.id}
+                        className="flex items-center gap-3 p-4 bg-gradient-to-r from-gray-800/30 to-gray-700/20 border border-gray-700/30 rounded-xl opacity-60 cursor-not-allowed relative"
+                      >
+                        <div className="absolute -top-2 -right-2 bg-purple-500 text-white text-xs px-2 py-1 rounded-full font-medium">
+                          Soon
+                        </div>
+                        <div
+                          className={`w-12 h-12 ${broker.color} rounded-xl flex items-center justify-center text-white font-bold shadow-lg flex-shrink-0`}
+                        >
+                          {broker.logo}
+                        </div>
+                        <div className="text-left flex-1">
+                          <div className="font-semibold text-gray-400">
+                            {broker.name}
+                          </div>
+                          <div className="text-xs text-gray-500">
+                            Coming Soon
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         )}

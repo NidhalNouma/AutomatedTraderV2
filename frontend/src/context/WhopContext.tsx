@@ -38,6 +38,12 @@ export const WhopProvider: React.FC<WhopProviderProps> = ({
       const { userId } = await whopApi.verifyUserToken(accessToken);
       const user = await whopApi.users.getUser({ userId });
 
+      // const checkAccess = await client.users.checkAccess("resource_id", {
+      //   id: userId,
+      // });
+
+      console.log(response.access_level);
+
       if (!user) {
         router.push("/"); // Redirect if user not found
         return;
