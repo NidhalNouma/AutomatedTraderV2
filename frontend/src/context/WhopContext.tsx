@@ -51,12 +51,12 @@ export const WhopProvider: React.FC<WhopProviderProps> = ({
         userId,
       });
 
-      console.log(response, response.hasAccess);
+      // console.log(response, response.hasAccess);
 
       user = {
         ...user,
         hasAccess: response.hasAccess ?? false,
-        accessType: response.accessLevel || null,
+        accessLevel: response.accessLevel || null,
       };
 
       const dbUser = await getOrCreateUser(userId);
