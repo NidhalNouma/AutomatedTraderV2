@@ -271,6 +271,7 @@ const AccountConnectionModal: React.FC<BrokerConnectionModalProps> = ({
       server: "",
       serverType: "demo",
       type: "S",
+      error: null,
     });
     setShowSecrets(false);
   };
