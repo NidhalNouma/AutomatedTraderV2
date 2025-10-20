@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Plus,
   FileText,
@@ -28,6 +28,7 @@ import {
   Activity,
 } from "lucide-react";
 import { useAccount } from "@/context/AccountContext";
+import { useWhop } from "@/context/WhopContext";
 import { useAlertGenerator } from "../hooks/useAlertGenerator";
 import { Card, Button } from "../ui";
 import AccountConnectionModal from "./AccountConnectionModal";
@@ -41,6 +42,7 @@ import { useBanner } from "../hooks/useBanner";
 const AutomateDashboard: React.FC = () => {
   const { accounts, toggleAccount, updateAccount, deleteAccount, isLoading } =
     useAccount();
+  const { whopUser } = useWhop();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [setupGuideModal, setSetupGuideModal] = useState<{
     isOpen: boolean;
@@ -51,6 +53,14 @@ const AutomateDashboard: React.FC = () => {
     brokerType: "",
     brokerName: "",
   });
+
+  useEffect(() => {
+    if (!whopUser) setIsModalOpen(false);
+    else if (isModalOpen && whopUser && !whopUser.hasAccess) {
+      setIsModalOpen(false);
+    }
+  }, [whopUser, isModalOpen]);
+
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [logsModal, setLogsModal] = useState<{
     isOpen: boolean;
