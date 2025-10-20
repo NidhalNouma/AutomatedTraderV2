@@ -20,6 +20,7 @@ import {
   TrendingUp,
   BarChart3,
   Key,
+  XCircle,
 } from "lucide-react";
 import { BrokerType } from "../types/broker";
 import { useAccount } from "@/context";
@@ -54,6 +55,7 @@ const AccountConnectionModal: React.FC<BrokerConnectionModalProps> = ({
     server: "",
     serverType: "demo" as "demo" | "live",
     type: "S" as "S" | "D",
+    error: null as string | null,
   });
 
   interface BrokerAccountType {
@@ -219,6 +221,7 @@ const AccountConnectionModal: React.FC<BrokerConnectionModalProps> = ({
     if (!selectedBroker) return;
 
     try {
+      setFormData((prev) => ({ ...prev, error: null }));
       await addAccount(
         formData.name,
         selectedBroker,
@@ -244,9 +247,14 @@ const AccountConnectionModal: React.FC<BrokerConnectionModalProps> = ({
         server: "",
         serverType: "demo",
         type: "S",
+        error: null,
       });
     } catch (error) {
       console.error("Failed to add account:", error);
+      setFormData((prev) => ({
+        ...prev,
+        error: "Failed to connect account. Please check your credentials.",
+      }));
     }
   };
 
@@ -1252,6 +1260,20 @@ const AccountConnectionModal: React.FC<BrokerConnectionModalProps> = ({
                 </div>
               </div>
             </div>
+
+            {formData.error && (
+              <div className="mt-4 p-4 bg-red-500/10 border border-red-500/30 rounded-xl">
+                <div className="flex items-start gap-3">
+                  <XCircle className="h-5 w-5 text-red-400 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <h4 className="text-red-300 font-semibold mb-2">Error</h4>
+                    <p className="text-red-300/80 text-sm leading-relaxed">
+                      {formData.error}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* Submit Button */}
             <div className="flex gap-4 mt-8">

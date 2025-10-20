@@ -458,10 +458,7 @@ const AutomateDashboard: React.FC = () => {
                         <Power className="h-4 w-4" />
                       </button>
                       <button
-                        onClick={
-                          null
-                          // () => setConfigModal({ isOpen: true, account })
-                        }
+                        // onClick={ () => setConfigModal({ isOpen: true, account })}
                         className="p-2 text-gray-400 hover:text-purple-400 hover:bg-purple-500/10 rounded-lg transition-all"
                         title="Settings"
                       >
