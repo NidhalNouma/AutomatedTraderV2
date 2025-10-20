@@ -18,7 +18,9 @@ import {
 import { Card } from "../ui";
 import { getBannersByCategory, getBannerById, Banner } from "../hooks/banners";
 import { useBanner } from "../hooks";
-import { QuickCharts } from ".";
+
+import { useWhop } from "@/context/WhopContext";
+import { QuickCharts } from "./";
 
 interface NewsArticle {
   title: string;
@@ -43,6 +45,12 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   const [lastNewsUpdate, setLastNewsUpdate] = React.useState<Date>(new Date());
   const [newsError, setNewsError] = React.useState<string | null>(null);
 
+  // User's membership plan - change this to match actual user plan
+
+  const { whopUser } = useWhop();
+  const userMembership: "Basic" | "Pro" | "Advanced" | "Lifetime" | null =
+    (whopUser && whopUser.hasAccess && whopUser.access.name) ?? null;
+
   // Get rotating banners for dashboard
   const dashboardBanners = [
     getBannerById("platform-main"), // Connect to broker
@@ -53,7 +61,7 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({
     getBannerById("trade-alerts"), // TradeAlerts
   ].filter(Boolean) as Banner[];
   const { currentBannerData, touchHandlers } = useBanner(
-    dashboardBanners.filter(Boolean),
+    dashboardBanners,
     true,
     4000
   );
@@ -338,14 +346,14 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({
           <div className="xl:col-span-2 bg-[#1a1a2e] border border-gray-700 rounded-2xl p-6 hover:border-gray-600 transition-all relative">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-                <Activity className="h-6 w-6 text-green-400" />
-                Today's Performance
+                <Activity className="h-6 w-6 text-cyan-400" />
+                📊 Today's Performance
               </h2>
               <div className="flex flex-col sm:flex-row items-end sm:items-center gap-2 sm:gap-3">
                 <div className="text-xs text-gray-400 hidden sm:block">
                   Last updated: {new Date().toLocaleTimeString()}
                 </div>
-                <div className="px-2 py-1 bg-green-500/20 text-green-300 border border-green-500/30 rounded-full text-xs font-medium whitespace-nowrap">
+                <div className="px-2 py-1 bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 rounded-full text-xs font-medium whitespace-nowrap">
                   <span className="sm:hidden">12 Active</span>
                   <span className="hidden sm:inline">12 Trades Active</span>
                 </div>
@@ -354,10 +362,10 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {/* Main P&L Card */}
-              <div className="bg-gradient-to-br from-gray-900/90 to-black/80 backdrop-blur-xl border border-gray-800/30 rounded-2xl p-4 hover:border-green-500/30 transition-all duration-300 cursor-pointer group hover:scale-[1.02] hover:shadow-xl hover:shadow-green-500/10">
+              <div className="bg-gradient-to-br from-gray-900/90 to-black/80 backdrop-blur-xl border border-gray-800/30 rounded-2xl p-4 hover:border-cyan-500/30 transition-all duration-300 cursor-pointer group hover:scale-[1.02] hover:shadow-xl hover:shadow-green-500/10">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 bg-green-500 rounded-xl flex items-center justify-center text-white text-sm font-bold shadow-lg">
+                    <div className="w-8 h-8 bg-cyan-500 rounded-xl flex items-center justify-center text-white text-sm font-bold shadow-lg">
                       $
                     </div>
                     <div>
@@ -367,7 +375,7 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                       <div className="text-gray-400 text-xs">Today</div>
                     </div>
                   </div>
-                  <TrendingUp className="h-4 w-4 text-gray-500 group-hover:text-green-400 transition-colors" />
+                  <TrendingUp className="h-4 w-4 text-gray-500 group-hover:text-cyan-400 transition-colors" />
                 </div>
 
                 <div className="h-12 mb-3 relative bg-black/20 rounded-xl p-2">
@@ -418,14 +426,14 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                     <div className="text-white font-bold text-lg">
                       {formatCurrency(todayData.totalPnL)}
                     </div>
-                    <div className="flex items-center gap-1 text-xs font-medium text-green-400">
+                    <div className="flex items-center gap-1 text-xs font-medium text-cyan-400">
                       <TrendingUp className="h-3 w-3" />
                       <span>
                         +{((todayData.totalPnL / 10000) * 100).toFixed(1)}%
                       </span>
                     </div>
                   </div>
-                  <div className="px-2 py-1 bg-green-500/20 text-green-300 text-xs font-medium rounded-full border border-green-500/30">
+                  <div className="px-2 py-1 bg-cyan-500/20 text-cyan-300 text-xs font-medium rounded-full border border-cyan-500/30">
                     Live
                   </div>
                 </div>
@@ -606,15 +614,99 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             </div>
           </div>
 
-          {/* Quick Actions */}
+          {/* Quick Actions & Membership */}
           <div className="bg-gradient-to-br from-gray-950/90 to-black/80 backdrop-blur-xl border border-gray-800/30 rounded-2xl p-6 hover:border-gray-600/50 transition-all">
+            {/* Membership Status */}
+            {(userMembership as string) === "none" ? (
+              <div className="mb-6 bg-gradient-to-r from-orange-500/10 to-red-500/10 border border-orange-500/30 rounded-xl p-4">
+                <div className="flex items-start gap-3">
+                  <div className="p-2 bg-orange-500/20 rounded-lg flex-shrink-0">
+                    <Target className="h-5 w-5 text-orange-400" />
+                  </div>
+                  <div className="flex-1">
+                    <h4 className="text-orange-300 font-semibold text-sm mb-1">
+                      🎯 No Active Membership
+                    </h4>
+                    <p className="text-orange-200/80 text-xs mb-3">
+                      Upgrade to unlock premium features and automated trading
+                    </p>
+                    <button
+                      onClick={() => onNavigate?.("membership")}
+                      className="w-full bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white px-4 py-2 rounded-lg text-xs font-semibold transition-all hover:scale-[1.02]"
+                    >
+                      View Plans →
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div
+                className={`mb-6 bg-gradient-to-r ${
+                  (userMembership as string) === "Lifetime"
+                    ? "from-yellow-500/10 to-orange-500/10 border-yellow-500/30"
+                    : "from-blue-500/10 to-cyan-500/10 border-blue-500/30"
+                } border rounded-xl p-4`}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div
+                      className={`p-2 ${
+                        (userMembership as string) === "Lifetime"
+                          ? "bg-yellow-500/20"
+                          : "bg-blue-500/20"
+                      } rounded-lg`}
+                    >
+                      <Target
+                        className={`h-5 w-5 ${
+                          (userMembership as string) === "Lifetime"
+                            ? "text-yellow-400"
+                            : "text-blue-400"
+                        }`}
+                      />
+                    </div>
+                    <div>
+                      <h4
+                        className={`${
+                          (userMembership as string) === "Lifetime"
+                            ? "text-yellow-300"
+                            : "text-blue-300"
+                        } font-semibold text-sm`}
+                      >
+                        {(userMembership as string) === "Lifetime"
+                          ? "👑"
+                          : "✨"}{" "}
+                        {userMembership} Member
+                      </h4>
+                      <p
+                        className={`${
+                          (userMembership as string) === "Lifetime"
+                            ? "text-yellow-200/80"
+                            : "text-blue-200/80"
+                        } text-xs`}
+                      >
+                        {(userMembership as string) === "Lifetime"
+                          ? "Lifetime access"
+                          : "Premium features unlocked"}
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => onNavigate?.("membership")}
+                    className="text-xs text-gray-400 hover:text-white transition-colors"
+                  >
+                    Manage →
+                  </button>
+                </div>
+              </div>
+            )}
+
             <div className="flex items-center gap-3 mb-6">
               <div className="p-3 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-xl border border-purple-500/30">
                 <Zap className="h-6 w-6 text-purple-400" />
               </div>
               <div>
                 <h3 className="text-xl font-semibold text-white">
-                  Quick Actions
+                  ⚡ Quick Actions
                 </h3>
                 <p className="text-gray-400 text-sm">
                   Get started with key features
@@ -647,23 +739,23 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({
 
               <button
                 onClick={() => onNavigate?.("automate")}
-                className="group relative overflow-hidden bg-gradient-to-r from-green-600/10 to-emerald-600/10 hover:from-green-600/20 hover:to-emerald-600/20 border border-green-500/30 hover:border-green-400/50 rounded-xl p-4 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-green-500/10"
+                className="group relative overflow-hidden bg-gradient-to-r from-green-600/10 to-emerald-600/10 hover:from-cyan-600/20 hover:to-teal-600/20 border border-cyan-500/30 hover:border-green-400/50 rounded-xl p-4 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-green-500/10"
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="p-2 bg-green-500/20 rounded-lg">
-                      <Plus className="h-5 w-5 text-green-400" />
+                    <div className="p-2 bg-cyan-500/20 rounded-lg">
+                      <Plus className="h-5 w-5 text-cyan-400" />
                     </div>
                     <div className="text-left">
                       <div className="font-semibold text-white text-base">
                         Connect Broker Account
                       </div>
-                      <div className="text-green-300/80 text-sm">
+                      <div className="text-cyan-300/80 text-sm">
                         Add your trading platform
                       </div>
                     </div>
                   </div>
-                  <ChevronRight className="h-5 w-5 text-green-400 group-hover:translate-x-1 transition-transform" />
+                  <ChevronRight className="h-5 w-5 text-cyan-400 group-hover:translate-x-1 transition-transform" />
                 </div>
               </button>
 

@@ -58,6 +58,12 @@ const Sidebar: React.FC<SidebarProps> = ({
       path: "/dashboard/marketplace",
     },
     {
+      id: "membership",
+      label: "Membership",
+      icon: Award,
+      path: "/dashboard/membership",
+    },
+    {
       id: "news",
       label: "Trading News",
       icon: FileText,
