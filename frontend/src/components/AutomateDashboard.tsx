@@ -58,8 +58,11 @@ const AutomateDashboard: React.FC = () => {
     if (!whopUser) setIsModalOpen(false);
     else if (isModalOpen && whopUser && !whopUser.hasAccess) {
       setIsModalOpen(false);
+    } else if (isModalOpen && whopUser && whopUser.hasAccess) {
+      if (whopUser.access && whopUser.access.accounts <= accounts.length)
+        setIsModalOpen(false);
     }
-  }, [whopUser, isModalOpen]);
+  }, [whopUser, isModalOpen, accounts.length]);
 
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [logsModal, setLogsModal] = useState<{

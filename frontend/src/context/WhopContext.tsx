@@ -51,13 +51,34 @@ export const WhopProvider: React.FC<WhopProviderProps> = ({
         userId,
       });
 
-      // console.log(response, response.hasAccess);
+      for (const plan of whopPlans) {
+        // console.log(`Checking access for plan ${plan}`);
+        const accessResp =
+          await whopApi.access.checkIfUserHasAccessToAccessPass({
+            accessPassId: plan.id,
+            userId,
+          });
+        // console.log(`Access for plan ${plan}:`, accessResp.hasAccess);
 
-      user = {
-        ...user,
-        hasAccess: response.hasAccess ?? false,
-        accessLevel: response.accessLevel || null,
-      };
+        if (accessResp.hasAccess) {
+          user.access = plan;
+          user.hasAccess = true;
+          // break;
+        }
+      }
+
+      // const presponse = await whopApi.companies.listMembers({
+      //   companyId: companyId!,
+      // });
+      // // prod_rYPTb6ExOywaT;
+
+      // console.log(user);
+
+      // user = {
+      //   ...user,
+      //   hasAccess: response.hasAccess ?? false,
+      //   accessLevel: response.accessLevel || null,
+      // };
 
       const dbUser = await getOrCreateUser(userId);
       setWhopUser(user);
@@ -81,3 +102,32 @@ export const WhopProvider: React.FC<WhopProviderProps> = ({
     <WhopContext.Provider value={{ whopUser }}>{children}</WhopContext.Provider>
   );
 };
+
+interface WhopPlan {
+  id: string;
+  name: string;
+  accounts: number;
+}
+
+const whopPlans: WhopPlan[] = [
+  {
+    id: "prod_rYPTb6ExOywaT",
+    name: "Basic",
+    accounts: 2,
+  },
+  {
+    id: "prod_z0dGVEd6S0W1f",
+    name: "Pro",
+    accounts: 5,
+  },
+  {
+    id: "prod_FkIozybpbMTmC",
+    name: "Advanced",
+    accounts: 10,
+  },
+  {
+    id: "prod_79euYQ959oTPJ",
+    name: "Lifetime",
+    accounts: 20,
+  },
+];

@@ -14,7 +14,7 @@ export interface LogEntry {
   executionTime: number;
   symbol: string;
   side: "BUY" | "SELL";
-  quantity: number;
+  quantity: string;
   price?: number;
 }
 
@@ -56,7 +56,7 @@ export function useLogs(accountId: string) {
                 executionTime: alert.executionTime!,
                 symbol: alertData.Asset!,
                 side: alertData.Type!,
-                quantity: Number(alertData.Volume!),
+                quantity:alertData.Volume ? alertData.Volume.toString() : "",
             }
 
             return log

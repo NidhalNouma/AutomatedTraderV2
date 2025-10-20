@@ -438,30 +438,6 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Social Proof */}
-      <div className="relative px-4 sm:px-6 lg:px-8 py-12 border-y border-gray-800/50">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-wrap items-center justify-center gap-12 opacity-60">
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white mb-1">10K+</div>
-              <div className="text-sm text-gray-400">Active Traders</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white mb-1">$2.4M+</div>
-              <div className="text-sm text-gray-400">Traded Daily</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white mb-1">99.9%</div>
-              <div className="text-sm text-gray-400">Uptime</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white mb-1">24/7</div>
-              <div className="text-sm text-gray-400">Trading</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* How It Works */}
       <section
         id="how-it-works"
@@ -894,7 +870,7 @@ export default function HomePage() {
             .map((plan, index) => (
               <div
                 key={index}
-                className="relative group hover:scale-[1.01] transition-all duration-500 max-w-6xl mx-auto mb-16 overflow-hidden rounded-3xl"
+                className="relative group hover:scale-[1.01] transition-all duration-500 max-w-6xl mx-auto mb-16 rounded-3xl"
                 style={{
                   boxShadow:
                     "0 0 80px rgba(59, 130, 246, 0.4), 0 0 40px rgba(59, 130, 246, 0.3), inset 0 0 60px rgba(59, 130, 246, 0.1)",
