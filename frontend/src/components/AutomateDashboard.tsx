@@ -113,7 +113,7 @@ const AutomateDashboard: React.FC = () => {
   const ButtonIcon = currentBannerData?.buttonIcon || Zap;
 
   const copyWebhookUrl = async (customId: string) => {
-    const webhookUrl = `${servicesURL.publicWebhook}${customId}`;
+    const webhookUrl = `${servicesURL.publicWebhook}/${customId}`;
     try {
       await navigator.clipboard.writeText(webhookUrl);
       setCopiedWebhook(customId);
@@ -161,12 +161,14 @@ const AutomateDashboard: React.FC = () => {
       kucoin: { name: "KuCoin", logo: "K", color: "bg-green-600" },
       metatrader5: { name: "MetaTrader5", logo: "MT5", color: "bg-blue-800" },
       mexc: { name: "MEXC", logo: "M", color: "bg-green-500" },
+      tradelocker: { name: "TradeLocker", logo: "TL", color: "bg-gray-600" },
+      hankotrade: { name: "HankoTrade", logo: "HT", color: "bg-blue-900" },
     };
 
     return (
       brokerData[brokerType] || {
         name: brokerType,
-        logo: "AT",
+        logo: "_",
         color: "bg-gray-500",
       }
     );
@@ -402,8 +404,7 @@ const AutomateDashboard: React.FC = () => {
                     </div>
                     <div className="bg-black/40 rounded-lg p-3 flex items-center gap-2">
                       <code className="flex-1 text-xs text-gray-400 font-mono truncate">
-                        {servicesURL.publicWebhook}
-                        {account.webhookPath}
+                        {servicesURL.publicWebhook}/{account.webhookPath}
                       </code>
                       <button
                         onClick={() => copyWebhookUrl(account.webhookPath)}

@@ -191,7 +191,7 @@ export class TradeLockerClient {
     }
   }
 
-  async closeTrade(trade: Trade, partial?: number) {
+  async closeTrade(trade: Trade, partial: number|undefined|null, startTime: number) {
     try {
       await this.login()
 
@@ -215,7 +215,7 @@ export class TradeLockerClient {
 
       if (closeReq.data?.errmsg) throw new Error(closeReq.data.errmsg);
 
-      const exeTime = Date.now();
+      const exeTime = Date.now() - startTime;
 
       const positions = await this.getClosedPositionsById(trade.tradeId);
       // console.log(positions)

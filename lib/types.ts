@@ -3,7 +3,7 @@
 export interface Account {
   userId: string;
   name: string;
-  broker: "tradelocker" | "binance" | "metatrader";
+  broker: "tradelocker" | "binance" | "metatrader" | "hankotrade";
   active: Boolean;
   accountNumber: string;
   accountPassword: string;

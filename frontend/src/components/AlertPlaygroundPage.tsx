@@ -161,11 +161,11 @@ const AlertPlaygroundPage: React.FC = () => {
                     </div>
                     <div>
                       <label className="block text-xs font-medium text-gray-300 mb-2">
-                        Strategy ID
+                        Trade ID
                       </label>
                       <input
                         type="text"
-                        placeholder="strategy_1, scalp_btc, swing_eur"
+                        placeholder="strategy_123, buy_3892, S_28929"
                         value={config.idValue}
                         onChange={(e) =>
                           updateConfig({ idValue: e.target.value })
@@ -173,7 +173,7 @@ const AlertPlaygroundPage: React.FC = () => {
                         className="w-full px-3 py-3 bg-gray-900/60 border border-purple-500/30 text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm transition-all"
                       />
                       <p className="text-xs text-gray-500 mt-2">
-                        Unique name to identify this strategy's trades
+                        Unique id to identify each trade
                       </p>
                     </div>
                   </div>

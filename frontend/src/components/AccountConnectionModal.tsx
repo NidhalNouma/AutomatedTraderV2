@@ -77,6 +77,13 @@ const AccountConnectionModal: React.FC<BrokerConnectionModalProps> = ({
       color: "bg-gray-700",
       popular: false,
     },
+    {
+      id: "hankotrade",
+      name: "HankoTrade",
+      logo: "HT",
+      color: "bg-blue-900",
+      popular: false,
+    },
   ];
 
   const comingSoonBrokers: BrokerAccountType[] = [
@@ -1206,38 +1213,40 @@ const AccountConnectionModal: React.FC<BrokerConnectionModalProps> = ({
                       </p>
                     </div>
 
-                    <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-2">
-                        Server *
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        value={formData.server}
-                        onChange={(e) =>
-                          setFormData((prev) => ({
-                            ...prev,
-                            server: e.target.value,
-                          }))
-                        }
-                        placeholder={
-                          formData.serverType === "demo"
-                            ? "e.g., demo.yourbroker.com:443"
-                            : "e.g., live.yourbroker.com:443"
-                        }
-                        className="w-full px-4 py-3 bg-gray-900/60 border border-blue-500/30 text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      />
-                      <p className="text-xs text-gray-500 mt-2">
-                        Your broker's{" "}
-                        {formData.serverType === "demo" ? "demo" : "live"}{" "}
-                        server address (found in your{" "}
-                        {
-                          forexBrokers.find((b) => b.id === selectedBroker)
-                            ?.name
-                        }{" "}
-                        account details)
-                      </p>
-                    </div>
+                    {selectedBroker !== "hankotrade" && (
+                      <div>
+                        <label className="block text-sm font-medium text-gray-300 mb-2">
+                          Server *
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          value={formData.server}
+                          onChange={(e) =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              server: e.target.value,
+                            }))
+                          }
+                          placeholder={
+                            formData.serverType === "demo"
+                              ? "e.g., demo.yourbroker.com:443"
+                              : "e.g., live.yourbroker.com:443"
+                          }
+                          className="w-full px-4 py-3 bg-gray-900/60 border border-blue-500/30 text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        />
+                        <p className="text-xs text-gray-500 mt-2">
+                          Your broker's{" "}
+                          {formData.serverType === "demo" ? "demo" : "live"}{" "}
+                          server address (found in your{" "}
+                          {
+                            forexBrokers.find((b) => b.id === selectedBroker)
+                              ?.name
+                          }{" "}
+                          account details)
+                        </p>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}

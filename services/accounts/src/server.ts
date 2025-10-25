@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
 
-import { TradeLockerClient } from "./lib/brokers";
+import { TradeLockerClient, HankoTradeBroker } from "./lib/brokers";
 import { saveTrade, getTradeByDetails, updateClosingTrade } from "./lib/trades-db";
 import { type Account, type Trade } from './lib/types'
 import { checkAlertData, type AlertData } from './lib/alerts'
@@ -22,18 +22,24 @@ app.get("/", (req: Request, res: Response) => {
 app.post("/check", async (req: Request, res: Response) => {
   try {
     const { broker, val1, val2, val3, type } = req.body;
-    
-    if (broker === 'tradelocker') {
-        if (!val1 || !val2 || !val3 || !type) {
-            return res.status(400).json({ error: "Missing required fields" });
-    }
+      if (broker === 'tradelocker') {
+          if (!val1 || !val2 || !val3 || !type) {
+              return res.status(400).json({ error: "Missing required fields" });
+      }
+              
+      const result = await TradeLockerClient.checkCredentials(val1, val2, val3, type);
+      console.log(result)
+      return res.json(result);
+    } else if (broker === 'hankotrade') {
+      if (!val1 || !val2 || !type) {
+        return res.status(400).json({ error: "Missing required fields" });
+      }
           
-//   console.log(val1, val2, val3, type)
-            
-    const result = await TradeLockerClient.checkCredentials(val1, val2, val3, type);
-    console.log(result)
-    return res.json(result);
+      const result = await HankoTradeBroker.checkCredentials(val1, val2, type);
+      console.log(result)
+      return res.json(result);
     }
+
     return res.status(400).json({ error: 'Invalid broker.' });
   } catch (error: any) {
     console.error("Error checking credentials:", error);
@@ -79,11 +85,43 @@ app.post("/trade", async (req: Request, res: Response) => {
         if (!oTrade) throw new Error(`No trade available with ID ${data.ID} to close.`);
 
         // ✅ Ensure Partial is numeric
-        const tr = await acc.closeTrade(oTrade, Number(data.Partial) || 0);
+        const tr = await acc.closeTrade(oTrade, Number(data.Partial) || 0, startTime);
         if ((tr as any).error) throw new Error((tr as any).error);
         closedTrade = (tr as any).trade ? ((tr as any).trade as Trade) : null;
       }
     }
+    else if (account.broker === "hankotrade") {
+      const acc = new HankoTradeBroker(account);
+
+      if (data.Action === "Entry") {
+        const tr = await acc.openTrade(
+          data.Asset!,
+          data.Type!,
+          Number(data.Volume!),
+          data.ID || "",
+          startTime ?? Date.now(),
+          data.Source || ""
+        );
+
+        if ((tr as any).error) throw new Error((tr as any).error);
+        opendTrade = tr as Trade;
+      } else if (data.Action === "Exit") {
+        const oTrade = await getTradeByDetails(
+          account.id,
+          account.userId,
+          data.ID || "",
+          data.Asset || ""
+        );
+
+        if (!oTrade) throw new Error(`No trade available with ID ${data.ID} to close.`);
+
+        const tr = await acc.closeTrade(oTrade, Number(data.Partial) || 0, startTime);
+        if ((tr as any).error) throw new Error((tr as any).error);
+        closedTrade = (tr as any).trade ? ((tr as any).trade as Trade) : null;
+      }
+    }
+
+
 
     if (opendTrade) {
       const sTrade = await saveTrade(opendTrade);
@@ -94,7 +132,6 @@ app.post("/trade", async (req: Request, res: Response) => {
       const cTrade = await updateClosingTrade(closedTrade);
       return res.json(cTrade);
     }
-
     return res.status(400).json({ error: "Invalid broker." });
   } catch (error: any) {
     console.error("Error placing/closing trade:", error);

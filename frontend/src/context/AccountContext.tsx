@@ -72,7 +72,7 @@ export const AccountProvider: React.FC<AccountProviderProps> = ({
         active: true,
         accountNumber: val1,
         accountPassword: val2,
-        accountPass: val3,
+        accountPass: val3 || "",
         accountType: type,
       };
       const newAccount = await addAccountDb(acc);

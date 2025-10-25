@@ -17,6 +17,7 @@ export type BrokerType =
   | 'tradelocker' 
   | 'tradestation'
   | 'acttrader'
+  | 'hankotrade'
   | 'dxtrade' 
   | 'ninjatrader';
 
