@@ -34,7 +34,7 @@ export class HankoTradeBroker {
       }
 
     const environmentUrl = (["l", "live"].includes(this.type!.toLowerCase())) 
-        ? "http://s257.hankotrade.com:10101"
+        ? "http://s257.hankotrade.com:10001"
         : "http://s257demo.hankotrade.com:10101";
     this.API_URL = environmentUrl;
 
