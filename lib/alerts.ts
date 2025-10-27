@@ -42,6 +42,7 @@ export function extractAlertData(alertMessage: string): AlertData {
         data.Asset = value?.toUpperCase();
         break;
       case "V":
+      case "Q":
         data.Volume = value;
         break;
       case "P":

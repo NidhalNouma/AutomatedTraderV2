@@ -382,7 +382,7 @@ const AccountConnectionModal: React.FC<BrokerConnectionModalProps> = ({
                     Full Documentation
                   </a>
                   <a
-                    href="https://discord.gg/uan282DjyE"
+                    href="https://discord.gg/jsM4m3fApc"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center justify-center gap-2 bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 px-4 py-3 rounded-xl font-medium transition-all border border-purple-500/30"
@@ -726,7 +726,7 @@ const AccountConnectionModal: React.FC<BrokerConnectionModalProps> = ({
                             Detailed Guide
                           </a>
                           <a
-                            href="https://discord.gg/uan282DjyE"
+                            href="https://discord.gg/jsM4m3fApc"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="flex items-center justify-center gap-2 bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 px-4 py-3 rounded-xl font-medium transition-all border border-purple-500/30"

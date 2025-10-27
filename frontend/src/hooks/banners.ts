@@ -38,7 +38,7 @@ export const banners: Banner[] = [
     buttonIcon: Users,
     gradient: "from-purple-500/15 via-indigo-500/15 to-blue-500/15",
     borderColor: "border-purple-500/30",
-    buttonLink: "https://discord.gg/uan282DjyE",
+    buttonLink: "https://discord.gg/jsM4m3fApc",
     category: 'platform',
     priority: 2
   },

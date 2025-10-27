@@ -45,7 +45,7 @@ export const ALERT_MESSAGE_FORMAT = {
 };
 
 export const EXTERNAL_LINKS = {
-  DISCORD: 'https://discord.gg/uan282DjyE',
+  DISCORD: 'https://discord.gg/jsM4m3fApc',
   TRUSTED_SIGNALS: 'https://trustedsignals.com',
   ISALGO: 'https://www.isalgo.com',
   LUXALGO: 'https://luxalgo.com',

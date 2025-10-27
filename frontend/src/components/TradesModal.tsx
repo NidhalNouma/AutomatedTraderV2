@@ -303,7 +303,7 @@ function Row({ trade }: { trade: any }) {
             <Fragment>
               <td colSpan={2} className="p-4"></td>
 
-              <td className="p-4 text-white">{trade.volume}</td>
+              <td className="p-4 text-white">{ct.volume}</td>
               <td colSpan={1} className="p-4">
                 {trade.entryPrice}
               </td>

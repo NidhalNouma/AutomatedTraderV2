@@ -1917,7 +1917,7 @@ const DocumentationPage: React.FC = () => {
                     for real-time help and discussions.
                   </p>
                   <a
-                    href="https://discord.gg/uan282DjyE"
+                    href="https://discord.gg/jsM4m3fApc"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 bg-green-600/20 hover:bg-green-600/30 text-green-300 px-4 py-2 rounded-lg font-medium transition-all border border-green-500/30"
@@ -2522,7 +2522,7 @@ const DocumentationPage: React.FC = () => {
                     community for real-time help and strategy discussions.
                   </p>
                   <a
-                    href="https://discord.gg/uan282DjyE"
+                    href="https://discord.gg/jsM4m3fApc"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 bg-green-600/20 hover:bg-green-600/30 text-green-300 px-4 py-2 rounded-lg font-medium transition-all border border-green-500/30"

@@ -59,7 +59,7 @@ export class HankoTradeBroker {
 
   async login(): Promise<void> {
     try {
-      const response = await this.axiosInstance.get(`${this.API_URL}/api/v2/auth/token`, {
+      const response = await this.axiosInstance.get(`${this.API_URL}/api/v2/auth/token?lifetime=20`, {
         auth: {
           username: this.username!,
           password: this.password!,
@@ -272,15 +272,20 @@ export class HankoTradeBroker {
       await this.login()
       const adjustedSymbol = this.adjust_symbol_name(oTrade.symbol);
       const adjustedQuantity = Number(quantity);
+
+      let volumeToClose = Number(oTrade.remainingVolume)
+      if (adjustedQuantity > 0)
+        volumeToClose = volumeToClose * adjustedQuantity / 100;
+
       const url = `${this.API_URL}/api/v2/trading/closetrade`;
       const orderType = oTrade.side.toUpperCase() === "BUY" || oTrade.side.toUpperCase() === "B" ? 0 : 1;
 
       const params = {
         token: this.accessToken,
-        trade: this.currentTrade?.tradeId,
+        trade: oTrade?.tradeId,
         symbol: adjustedSymbol,
         side: orderType,
-        quantity: adjustedQuantity,
+        quantity: volumeToClose,
       };
 
       const response = await this.axiosInstance.get(url, {
@@ -297,8 +302,9 @@ export class HankoTradeBroker {
       };
 
       if (data.success) {
-        const orderId = this.currentTrade?.orderId;
+        const orderId = oTrade?.tradeId;
         const closedPositions = await this.getClosedTrades(adjustedSymbol, orderId!);
+        console.log(closedPositions)
 
         const closedTrades: ClosedTrade[] = closedPositions.map((pos: any) => ({
           tradeId: pos.tradeId,
@@ -311,7 +317,7 @@ export class HankoTradeBroker {
           pnl: Number(pos.profit),
         }));
         const rTrade: Trade = {
-          ...this.currentTrade!,
+          ...oTrade!,
           exeTime,
           closedTrades,
         };

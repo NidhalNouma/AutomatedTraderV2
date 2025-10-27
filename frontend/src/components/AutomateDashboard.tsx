@@ -1921,7 +1921,7 @@ const SetupGuideContent: React.FC<SetupGuideContentProps> = ({
                   </div>
                 </div>
                 <a
-                  href="https://discord.gg/uan282DjyE"
+                  href="https://discord.gg/jsM4m3fApc"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold transition-all hover:scale-105 shadow-lg"
