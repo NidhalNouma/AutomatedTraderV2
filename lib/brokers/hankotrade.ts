@@ -256,6 +256,7 @@ export class HankoTradeBroker {
             volumeDigits: 2,
             profitDigits: 2,
             priceDigits: null,
+            contractSize
         };
         return trade;
       } else {
@@ -272,10 +273,15 @@ export class HankoTradeBroker {
       await this.login()
       const adjustedSymbol = this.adjust_symbol_name(oTrade.symbol);
       const adjustedQuantity = Number(quantity);
+      const contractSize = Number(oTrade.contractSize ?? 1000);
 
-      let volumeToClose = Number(oTrade.remainingVolume)
-      if (adjustedQuantity > 0)
-        volumeToClose = volumeToClose * adjustedQuantity / 100;
+      let volumeToClose = Number(oTrade.remainingVolume);
+      if (adjustedQuantity > 0) {
+        const volumeToClose1 = Number(oTrade.volume) * adjustedQuantity / 100;
+        if (volumeToClose1 < volumeToClose)
+          volumeToClose = volumeToClose1;
+      }
+
 
       const url = `${this.API_URL}/api/v2/trading/closetrade`;
       const orderType = oTrade.side.toUpperCase() === "BUY" || oTrade.side.toUpperCase() === "B" ? 0 : 1;
@@ -304,7 +310,7 @@ export class HankoTradeBroker {
       if (data.success) {
         const orderId = oTrade?.tradeId;
         const closedPositions = await this.getClosedTrades(adjustedSymbol, orderId!);
-        console.log(closedPositions)
+        // console.log(closedPositions)
 
         const closedTrades: ClosedTrade[] = closedPositions.map((pos: any) => ({
           tradeId: pos.tradeId,
