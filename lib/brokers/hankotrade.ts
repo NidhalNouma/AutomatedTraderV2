@@ -200,16 +200,18 @@ export class HankoTradeBroker {
 
       const url = `${this.API_URL}/api/v2/trading/placemarket`;
       const orderType = side.toUpperCase() === "BUY" || side.toUpperCase() === "B" ? 1 : 0;
-      const commentary = `${customId}_${randomUUID()}`;
+      const commentary = `${customId}`;
 
       const params = {
         token: this.accessToken,
         account: this.accountId,
         symbol: adjustedSymbol,
         side: orderType,
-        quantity: adjustedQuantity,
+        quantity: Math.round(adjustedQuantity),
         commentary,
       };
+
+      console.log(params)
 
       const start = performance.now();
       const response = await this.axiosInstance.get(url, {
@@ -227,6 +229,8 @@ export class HankoTradeBroker {
             OrderId: string,
         },
       };
+
+      console.log(data)
 
       if (data.success) {
         const tradeInfo = data.result || {};
