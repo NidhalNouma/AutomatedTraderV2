@@ -66,6 +66,7 @@ export function useLogs(accountId: string) {
   }
 
     return {
+      logs,
         filter,
         setFilter,
         isLoading,

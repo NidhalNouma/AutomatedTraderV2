@@ -26,6 +26,7 @@ const LogsModal: React.FC<LogsModalProps> = ({
   accountName,
 }) => {
   const {
+    logs,
     filter,
     setFilter,
     isLoading,
@@ -39,6 +40,34 @@ const LogsModal: React.FC<LogsModalProps> = ({
       getLogs();
     }
   }, [isOpen, accountId]);
+
+  const handleExport = () => {
+    const headers = [
+      "ID",
+      "Timestamp",
+      "Status",
+      "Alert Message",
+      "Response Message",
+    ];
+    const rows = logs.map((log) => [
+      log.id,
+      log.timestamp,
+      log.status,
+      `"${log.alertMessage.replace(/"/g, '""')}"`,
+      `"${log.responseMessage.replace(/"/g, '""')}"`,
+    ]);
+
+    const csvContent = [headers, ...rows].map((e) => e.join(",")).join("\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", `logs_${accountName}_${Date.now()}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   const getStatusIcon = (status: LogEntry["status"]) => {
     switch (status) {
@@ -115,7 +144,12 @@ const LogsModal: React.FC<LogsModalProps> = ({
                 className="pl-10 pr-4 py-2 bg-gray-900/60 border border-gray-700/50 text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
               />
             </div>
-            <Button variant="outline" size="sm" icon={Download}>
+            <Button
+              onClick={handleExport}
+              variant="outline"
+              size="sm"
+              icon={Download}
+            >
               Export
             </Button>
           </div>
