@@ -83,6 +83,8 @@ export const WhopProvider: React.FC<WhopProviderProps> = ({
   useEffect(() => {
     if (whopUser && window.location.pathname === "/") {
       router.push("/dashboard");
+    } else if (!whopUser && window.location.pathname !== "/") {
+      router.push("/");
     }
   }, [whopUser]);
 

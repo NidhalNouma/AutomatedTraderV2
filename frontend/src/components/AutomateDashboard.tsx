@@ -35,6 +35,9 @@ import AccountConnectionModal from "./AccountConnectionModal";
 import LogsModal from "./LogsModal";
 import TradesModal from "./TradesModal";
 import ConfigModal from "./ConfigModal";
+
+import PricingModal from "./PricingModal";
+import MembershipUpsellModal from "./MembershipUpsellModal";
 import { servicesURL } from "@/utils";
 import { getBannersByCategory, getBannerById, Banner } from "../hooks/banners";
 import { useBanner } from "../hooks/useBanner";
@@ -44,6 +47,9 @@ const AutomateDashboard: React.FC = () => {
     useAccount();
   const { whopUser } = useWhop();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isPricingModalOpen, setIsPricingModalOpen] = useState(false);
+  const [showMembershipModal, setShowMembershipModal] = useState(false);
+
   const [setupGuideModal, setSetupGuideModal] = useState<{
     isOpen: boolean;
     brokerType: string;
@@ -55,12 +61,17 @@ const AutomateDashboard: React.FC = () => {
   });
 
   useEffect(() => {
-    if (!whopUser) setIsModalOpen(false);
-    else if (isModalOpen && whopUser && !whopUser.hasAccess) {
+    if (!whopUser) {
+      setIsPricingModalOpen(true);
+      setIsModalOpen(false);
+    } else if (isModalOpen && whopUser && !whopUser.hasAccess) {
+      setIsPricingModalOpen(true);
       setIsModalOpen(false);
     } else if (isModalOpen && whopUser && whopUser.hasAccess) {
-      if (whopUser.access && whopUser.access.accounts <= accounts.length)
+      if (whopUser.access && whopUser.access.accounts <= accounts.length) {
+        setIsPricingModalOpen(true);
         setIsModalOpen(false);
+      }
     }
   }, [whopUser, isModalOpen, accounts.length]);
 
@@ -763,6 +774,16 @@ const AutomateDashboard: React.FC = () => {
             setConfigModal({ isOpen: false, account: null });
           }
         }}
+      />
+      {/* Modals */}
+      <PricingModal
+        isOpen={isPricingModalOpen}
+        onClose={() => setIsPricingModalOpen(false)}
+      />
+
+      <MembershipUpsellModal
+        isOpen={showMembershipModal}
+        onClose={() => setShowMembershipModal(false)}
       />
 
       {/* Setup Guide Modal */}
