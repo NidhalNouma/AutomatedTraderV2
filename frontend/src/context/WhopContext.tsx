@@ -33,15 +33,18 @@ export const WhopProvider: React.FC<WhopProviderProps> = ({
 }) => {
   const router = useRouter();
   const [whopUser, setWhopUser] = useState<any>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   async function getWhopUser() {
     try {
       console.log("Verifying user token...", whopApi);
+      setLoading(true);
       const { userId } = await whopApi.verifyUserToken(accessToken);
       const whopUser = await whopApi.users.getUser({ userId });
 
       if (!whopUser) {
         router.push("/"); // Redirect if user not found
+        setLoading(false);
         return;
       }
 
@@ -69,9 +72,11 @@ export const WhopProvider: React.FC<WhopProviderProps> = ({
       }
 
       const dbUser = await getOrCreateUser(userId);
+      setLoading(false);
       setWhopUser(user);
     } catch (err) {
       console.error("Failed to load Whop user:", err);
+      setLoading(false);
       router.push("/"); // Redirect on error
     }
   }
@@ -81,12 +86,13 @@ export const WhopProvider: React.FC<WhopProviderProps> = ({
   }, []);
 
   useEffect(() => {
+    if (loading) return;
     if (whopUser && window.location.pathname === "/") {
       router.push("/dashboard");
     } else if (!whopUser && window.location.pathname !== "/") {
       router.push("/");
     }
-  }, [whopUser]);
+  }, [whopUser, loading]);
 
   return (
     <WhopContext.Provider value={{ whopUser }}>{children}</WhopContext.Provider>

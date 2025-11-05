@@ -45,6 +45,8 @@ import {
 import { Button, Card } from "../ui";
 import { ChatWidget } from "../components/ChatWidget";
 
+import { pricingPlans } from "@/utils";
+
 export default function HomePage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [currentWord, setCurrentWord] = useState(0);
@@ -265,94 +267,6 @@ export default function HomePage() {
       avatar: "AT",
       profit: "+250%",
       timeframe: "8 months",
-    },
-  ];
-
-  const pricingPlans = [
-    {
-      name: "Basic",
-      price: "$29",
-      period: "/month",
-      description: "Perfect for individual traders getting started",
-      features: [
-        "1 Broker Account",
-        "Alert Playground Access",
-        "Charts Hub & Live Data",
-        "Trading News Feed",
-        "Basic Trade History",
-        "Email Support",
-        "Discord Community Access",
-      ],
-      popular: false,
-      cta: "Start Automating",
-      highlight: "",
-      link: "https://whop.com/automated-trader-free/automated-trader-basic/",
-    },
-    {
-      name: "Pro",
-      price: "$79",
-      period: "/month",
-      description: "For serious traders and growing portfolios",
-      features: [
-        "3 Broker Accounts",
-        "Advanced Alert Templates (Coming Soon)",
-        "Premium Market Data",
-        "Advanced Analytics (Coming Soon)",
-        "Priority Support",
-        "Custom Webhook URLs (Coming Soon)",
-        "Risk Management Tools",
-        "Portfolio Tracking",
-        "Real Trader Reviews",
-      ],
-      popular: true,
-      cta: "Start Automating",
-      highlight: "Best Value",
-      link: "https://whop.com/automated-trader-free/automated-trader-pro/",
-    },
-    {
-      name: "Advanced",
-      price: "$199",
-      period: "/month",
-      description: "For trading firms and institutions",
-      features: [
-        "10 Broker Accounts",
-        "Custom Integrations",
-        "Dedicated Account Manager",
-        "24/7 Phone Support",
-        "Advanced Security Features",
-        "Custom Reporting",
-        "SLA Guarantee",
-        "Team Management",
-        "API Access (Coming Soon)",
-      ],
-      popular: false,
-      cta: "Start Automating",
-      highlight: "",
-      link: "https://whop.com/automated-trader-free/automated-trader-advanced/",
-    },
-    {
-      name: "Lifetime",
-      price: "$1,499",
-      period: "one-time",
-      description: "Pay once, own forever",
-      features: [
-        "One-time payment, lifetime access",
-        "Unlimited Broker Accounts",
-        "All Advanced Features",
-        "Lifetime Updates",
-        "Priority Support Forever",
-        "Custom Integrations",
-        "Advanced Security Features",
-        "Custom Reporting",
-        "Team Management",
-        "API Access (Coming Soon)",
-        "Early Access to New Features",
-      ],
-      popular: false,
-      cta: "Get Lifetime Access",
-      highlight: "Best Deal",
-      link: "https://whop.com/automated-trader-free/automated-trader-lifetime/",
-      lifetime: true,
     },
   ];
 
@@ -1866,7 +1780,7 @@ export default function HomePage() {
           {/* Lifetime Plan - Featured at Top */}
           <div className="max-w-4xl mx-auto mb-12">
             {pricingPlans
-              .filter((plan) => plan.lifetime)
+              .filter((plan) => plan.name === "Lifetime")
               .map((plan, idx) => (
                 <div key={idx} className="relative group">
                   <div className="absolute -top-5 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 text-white text-sm font-bold px-6 py-2 rounded-full shadow-xl z-10 whitespace-nowrap animate-pulse">
@@ -1945,7 +1859,7 @@ export default function HomePage() {
           {/* Monthly Plans */}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
             {pricingPlans
-              .filter((plan) => !plan.lifetime)
+              .filter((plan) => plan.name !== "Lifetime")
               .map((plan, idx) => (
                 <div
                   key={idx}
