@@ -177,6 +177,14 @@ export class HankoTradeBroker {
         const instruments = data.result || [];
         const instrument = instruments.find(inst => inst.Symbol === adjustedSymbol);
         if (instrument) {
+          const minContractSize = instrument.MinTradeSize?.toString() || '1';
+          let contractSizeDigits = 0;
+          if (minContractSize) {
+            // count the numer of 0 in the contract size
+            contractSizeDigits = minContractSize.length - minContractSize.replace(/0+$/, '').length;
+          }
+          instrument.contractSizeDigits = contractSizeDigits;
+            
             return instrument;
         }
         throw new Error(`Symbol ${adjustedSymbol} not found.`);
@@ -190,13 +198,33 @@ export class HankoTradeBroker {
     }
  }
 
+  setQuantitySize(quantity: number, minSize: number, tradeSizeDigits: number): number {
+    // Divide quantity by 10^tradeSizeDigits
+    let factor = quantity / Math.pow(10, tradeSizeDigits);
+    // Round to nearest integer
+    factor = Math.round(factor);
+    // Multiply back to get adjusted quantity
+    quantity = factor * Math.pow(10, tradeSizeDigits);
+
+    console.log("Adjusted quantity:", quantity);
+
+    // Ensure quantity is not below minimum
+    if (quantity < Number(minSize)) {
+      quantity = Number(minSize);
+    }
+
+    return quantity;
+  }
+
   async openTrade(symbol: string, side: string, quantity: number, customId: string, startTime: number, source?: string) {
     try {
       await this.login()
       const adjustedSymbol = this.adjust_symbol_name(symbol);
       const symbolInfo = await this.get_symbol_info(adjustedSymbol);
       const contractSize = symbolInfo?.ContractSize || 1;
-      const adjustedQuantity = Number(quantity) * Number(contractSize);
+      const contractSizeDigits = symbolInfo?.contractSizeDigits || 2;
+      let adjustedQuantity = Number(quantity) * Number(contractSize);
+      adjustedQuantity = this.setQuantitySize(adjustedQuantity, symbolInfo.MinTradeSize, contractSizeDigits);
 
       const url = `${this.API_URL}/api/v2/trading/placemarket`;
       const orderType = side.toUpperCase() === "BUY" || side.toUpperCase() === "B" ? 1 : 0;
@@ -260,7 +288,8 @@ export class HankoTradeBroker {
             volumeDigits: 2,
             profitDigits: 2,
             priceDigits: null,
-            contractSize
+            contractSize,
+            contractSizeDigits
         };
         return trade;
       } else {
@@ -276,6 +305,9 @@ export class HankoTradeBroker {
     try {
       await this.login()
       const adjustedSymbol = this.adjust_symbol_name(oTrade.symbol);
+
+      const contractSizeDigits =  Number(oTrade.contractSizeDigits ?? 2);
+
       const adjustedQuantity = Number(quantity);
       const contractSize = Number(oTrade.contractSize ?? 1000);
 
@@ -284,7 +316,11 @@ export class HankoTradeBroker {
         const volumeToClose1 = Number(oTrade.volume) * adjustedQuantity / 100;
         if (volumeToClose1 < volumeToClose)
           volumeToClose = volumeToClose1;
+
+        volumeToClose = this.setQuantitySize(volumeToClose, contractSize, contractSizeDigits);
       }
+
+      // console.log(`Volume to close: ${oTrade.tradeId}, ${oTrade.symbol}, ${oTrade.contractSizeDigits} => ${volumeToClose}`);
 
 
       const url = `${this.API_URL}/api/v2/trading/closetrade`;

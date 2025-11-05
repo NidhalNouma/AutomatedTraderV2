@@ -83,18 +83,22 @@ export async function getTradeByDetails(
   accountId: string,
   userId: string,
   customId: string,
-  symbol: string
+  symbol: string,
 ): Promise<Trade | null> {
   const snapshot = await getDocs(tradesRef);
+  let trades: Trade[] = []
   const tradeDoc = snapshot.docs.find((doc) => {
     const data = doc.data() as Trade;
-    return (
-      data.accountId === accountId &&
-      data.userId === userId &&
-      data.customId === customId &&
-      data.symbol === symbol
-    );
+    let tradeMatches = data.accountId === accountId && data.userId === userId && data.customId === customId && data.symbol === symbol && (data.status === 'open' || data.status === 'partial');
+    if (tradeMatches) {
+      trades.push({ id: doc.id, ...data });
+    }
+    return false; // continue searching to collect all matching trades
   });
 
-  return tradeDoc ? { id: tradeDoc.id, ...(tradeDoc.data() as Trade) } : null;
+  trades.sort((a, b) => Number(b?.createdAt ?? 0) - Number(a?.createdAt ?? 0));
+
+  // console.log(trades)
+  
+  return trades.length > 0 ? trades[0] : null;
 }
