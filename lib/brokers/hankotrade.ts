@@ -289,7 +289,8 @@ export class HankoTradeBroker {
             profitDigits: 2,
             priceDigits: null,
             contractSize,
-            contractSizeDigits
+            contractSizeDigits,
+            minTradeSize: Number(symbolInfo?.MinTradeSize) || 1,
         };
         return trade;
       } else {
@@ -310,6 +311,7 @@ export class HankoTradeBroker {
 
       const adjustedQuantity = Number(quantity);
       const contractSize = Number(oTrade.contractSize ?? 1000);
+      const minContractSize = Number(oTrade.minTradeSize ?? 1);
 
       let volumeToClose = Number(oTrade.remainingVolume);
       if (adjustedQuantity > 0) {
@@ -317,7 +319,7 @@ export class HankoTradeBroker {
         if (volumeToClose1 < volumeToClose)
           volumeToClose = volumeToClose1;
 
-        volumeToClose = this.setQuantitySize(volumeToClose, contractSize, contractSizeDigits);
+        volumeToClose = this.setQuantitySize(volumeToClose, minContractSize, contractSizeDigits);
       }
 
       // console.log(`Volume to close: ${oTrade.tradeId}, ${oTrade.symbol}, ${oTrade.contractSizeDigits} => ${volumeToClose}`);
@@ -333,6 +335,8 @@ export class HankoTradeBroker {
         side: orderType,
         quantity: volumeToClose,
       };
+
+      // console.log(params)
 
       const response = await this.axiosInstance.get(url, {
         headers: {
