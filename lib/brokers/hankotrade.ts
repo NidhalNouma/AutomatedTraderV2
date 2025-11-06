@@ -180,12 +180,18 @@ export class HankoTradeBroker {
           const minContractSize = instrument.MinTradeSize?.toString() || '1';
           let contractSizeDigits = 0;
           if (minContractSize) {
-            // count the numer of 0 in the contract size
-            contractSizeDigits = minContractSize.length - minContractSize.replace(/0+$/, '').length;
+            const minContractVal = parseFloat(minContractSize);
+            if (minContractVal === 1) {
+              contractSizeDigits = 0;
+            } else if (minContractVal > 1) {
+              contractSizeDigits = Math.log10(minContractVal);
+            } else if (minContractVal < 1) {
+              contractSizeDigits = Math.log10(minContractVal);
+            }
+            contractSizeDigits = Math.trunc(contractSizeDigits);
           }
           instrument.contractSizeDigits = contractSizeDigits;
-            
-            return instrument;
+          return instrument;
         }
         throw new Error(`Symbol ${adjustedSymbol} not found.`);
         } else {
@@ -200,11 +206,15 @@ export class HankoTradeBroker {
 
   setQuantitySize(quantity: number, minSize: number, tradeSizeDigits: number): number {
     // Divide quantity by 10^tradeSizeDigits
+ 
     let factor = quantity / Math.pow(10, tradeSizeDigits);
     // Round to nearest integer
     factor = Math.round(factor);
     // Multiply back to get adjusted quantity
     quantity = factor * Math.pow(10, tradeSizeDigits);
+
+    const minSizeDecimals = Math.max(0, -Math.floor(Math.log10(minSize)));
+    quantity = parseFloat(quantity.toFixed(minSizeDecimals));
 
     console.log("Adjusted quantity:", quantity);
 
@@ -221,8 +231,9 @@ export class HankoTradeBroker {
       await this.login()
       const adjustedSymbol = this.adjust_symbol_name(symbol);
       const symbolInfo = await this.get_symbol_info(adjustedSymbol);
-      const contractSize = symbolInfo?.ContractSize || 1;
-      const contractSizeDigits = symbolInfo?.contractSizeDigits || 2;
+      console.log(symbolInfo)
+      const contractSize = symbolInfo?.ContractSize ?? 1;
+      const contractSizeDigits = symbolInfo?.contractSizeDigits ?? 2;
       let adjustedQuantity = Number(quantity) * Number(contractSize);
       adjustedQuantity = this.setQuantitySize(adjustedQuantity, symbolInfo.MinTradeSize, contractSizeDigits);
 
@@ -254,15 +265,15 @@ export class HankoTradeBroker {
         success: boolean,
         message?: string,
         result: {
-            OrderId: string,
+            OrderID: string,
         },
       };
 
-      console.log(data)
+      // console.log(data)
 
       if (data.success) {
         const tradeInfo = data.result || {};
-        const orderId = tradeInfo.OrderId ? String(tradeInfo.OrderId) : "";
+        const orderId = tradeInfo.OrderID ? String(tradeInfo.OrderID) : "";
         const orderInfo = await this.getOpenTradeByCustomId(adjustedSymbol!, commentary);
 
         const trade: Trade = {
@@ -318,6 +329,8 @@ export class HankoTradeBroker {
         const volumeToClose1 = Number(oTrade.volume) * adjustedQuantity / 100;
         if (volumeToClose1 < volumeToClose)
           volumeToClose = volumeToClose1;
+
+        // console.log(volumeToClose)
 
         volumeToClose = this.setQuantitySize(volumeToClose, minContractSize, contractSizeDigits);
       }
