@@ -142,24 +142,27 @@ export class TradeLockerClient {
       ) as any;
 
       const exeTime = Date.now() - startTime;
-        
-      const orderResData = orderRes.data?.d as any
+      if (orderRes.data?.errmsg) throw new Error(orderRes.data.errmsg);
+
+      const orderResData = orderRes.data?.d as any;
       const orderId = orderResData?.orderId;
       if (!orderId) throw new Error("Failed to open trade.");
 
       const order = await this.getOrder(orderId, instrumentId)
       
-      const positionId = order?.positionId
+      const positionId = order?.positionId ?? ''
+      if (!positionId) throw new Error("Order placed but failed to retrieve position ID.");
       
       const positions = await this.getOpenPosition()
       
       const position = positions.find(pos => pos.id === positionId)
+      if (!position) throw new Error("Order placed but failed to retrieve position details.");
       
       // console.log(orderResData, order, position)
 
       const trade: Trade = {
         orderId: orderId,
-        tradeId: positionId,
+        tradeId: position.id!,
         customId: customId,
         accountId: this.account!.id!,
         userId: this.account!.userId!,
