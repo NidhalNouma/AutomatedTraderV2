@@ -79,7 +79,8 @@ app.post("/trade", async (req: Request, res: Response) => {
           account.id,
           account.userId,
           data.ID || "",
-          data.Asset || ""
+          data.Asset || "",
+          data.Type || ""
         );
 
         if (!oTrade) throw new Error(`No trade available with ID ${data.ID} to close.`);
@@ -110,7 +111,8 @@ app.post("/trade", async (req: Request, res: Response) => {
           account.id,
           account.userId,
           data.ID || "",
-          data.Asset || ""
+          data.Asset || "",
+          data.Type || ""
         );
 
         if (!oTrade) throw new Error(`No trade available with ID ${data.ID} to close.`);

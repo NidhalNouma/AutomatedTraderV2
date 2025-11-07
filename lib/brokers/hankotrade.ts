@@ -206,21 +206,23 @@ export class HankoTradeBroker {
 
   setQuantitySize(quantity: number, minSize: number, tradeSizeDigits: number): number {
     // Divide quantity by 10^tradeSizeDigits
- 
-    let factor = quantity / Math.pow(10, tradeSizeDigits);
-    // Round to nearest integer
-    factor = Math.round(factor);
-    // Multiply back to get adjusted quantity
-    quantity = factor * Math.pow(10, tradeSizeDigits);
 
     const minSizeDecimals = Math.max(0, -Math.floor(Math.log10(minSize)));
-    quantity = parseFloat(quantity.toFixed(minSizeDecimals));
+    let factor = quantity / (10 ** tradeSizeDigits);
+    // Round to nearest integer
+    factor = Number(factor.toFixed(minSizeDecimals));
+    // Multiply back to get adjusted quantity
+    quantity = factor * (10 ** tradeSizeDigits);
+    // console.log("Quantity after trade size adjustment:", quantity);
 
-    console.log("Adjusted quantity:", quantity);
+    // console.log("Min size decimals:", minSizeDecimals, minSize);
+    quantity = Number(quantity.toFixed(minSizeDecimals));
+
+    console.log("Adjusted quantity:", quantity, minSize);
 
     // Ensure quantity is not below minimum
-    if (quantity < Number(minSize)) {
-      quantity = Number(minSize);
+    if (quantity < minSize) {
+      quantity = minSize;
     }
 
     return quantity;
@@ -246,11 +248,11 @@ export class HankoTradeBroker {
         account: this.accountId,
         symbol: adjustedSymbol,
         side: orderType,
-        quantity: Math.round(adjustedQuantity),
+        quantity: adjustedQuantity,
         commentary,
       };
 
-      console.log(params)
+      // console.log(params)
 
       const start = performance.now();
       const response = await this.axiosInstance.get(url, {

@@ -47,11 +47,13 @@ export class TradeLockerClient {
 
   private async login(): Promise<void> {
     try {
-      const res = await axios.post(`${this.baseUrl}/backend-api/auth/jwt/token`, {
+      const body = {
         email: this.username,
         password: this.password,
         server: this.server,
-      });
+      };
+      console.log(body);
+      const res = await axios.post(`${this.baseUrl}/backend-api/auth/jwt/token`, body);
       
       const data = res.data as {
             accessToken: string,
@@ -70,6 +72,7 @@ export class TradeLockerClient {
     } catch (error: any) {
       const errMsg = error?.response?.data?.error || error?.response?.data?.message || error?.message || error?.code || 'Unknown error occurred';
       console.log(errMsg)
+      throw new Error(`Login failed: ${errMsg}`);
     }
   }
 
@@ -290,6 +293,7 @@ export class TradeLockerClient {
 
   async getSymbolId(symbol: string) {
     // Find instrument ID by symbol
+    try {
       const instRes = await axios.get(`${this.baseUrl}/backend-api/trade/accounts/${this.accountId}/instruments`, {
         headers: { Authorization: `Bearer ${this.token}`, 'accNum': this.accNum },
       }) as any;
@@ -303,6 +307,10 @@ export class TradeLockerClient {
       instrumentId: instrument.tradableInstrumentId,
       instrumentRooutes: instrument.routes
     };
+    }
+    catch (e) {
+      throw new Error(`Error fetching symbol ID for ${symbol}: ${e}`);
+    }
   }
 
   async getOrder(orderId: string, tradableInstrumentId: Number) {

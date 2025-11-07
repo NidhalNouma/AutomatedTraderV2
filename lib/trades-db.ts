@@ -84,12 +84,13 @@ export async function getTradeByDetails(
   userId: string,
   customId: string,
   symbol: string,
+  type?: string
 ): Promise<Trade | null> {
   const snapshot = await getDocs(tradesRef);
   let trades: Trade[] = []
   const tradeDoc = snapshot.docs.find((doc) => {
     const data = doc.data() as Trade;
-    let tradeMatches = data.accountId === accountId && data.userId === userId && data.customId === customId && data.symbol === symbol && (data.status === 'open' || data.status === 'partial');
+    let tradeMatches = data.accountId === accountId && data.userId === userId && data.customId === customId && data.side === type && data.symbol === symbol && (data.status === 'open' || data.status === 'partial');
     if (tradeMatches) {
       trades.push({ id: doc.id, ...data });
     }
