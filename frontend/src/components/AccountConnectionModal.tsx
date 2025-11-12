@@ -53,6 +53,7 @@ const AccountConnectionModal: React.FC<BrokerConnectionModalProps> = ({
     username: "",
     password: "",
     server: "",
+    accountId: "",
     serverType: "demo" as "demo" | "live",
     type: "S" as "S" | "D",
     error: null as string | null,
@@ -238,6 +239,7 @@ const AccountConnectionModal: React.FC<BrokerConnectionModalProps> = ({
         formData.username || undefined,
         formData.password || undefined,
         formData.server || undefined,
+        formData.accountId || undefined,
         formData.serverType
       );
 
@@ -252,6 +254,7 @@ const AccountConnectionModal: React.FC<BrokerConnectionModalProps> = ({
         username: "",
         password: "",
         server: "",
+        accountId: "",
         serverType: "demo",
         type: "S",
         error: null,
@@ -276,6 +279,7 @@ const AccountConnectionModal: React.FC<BrokerConnectionModalProps> = ({
       username: "",
       password: "",
       server: "",
+      accountId: "",
       serverType: "demo",
       type: "S",
       error: null,
@@ -945,11 +949,11 @@ const AccountConnectionModal: React.FC<BrokerConnectionModalProps> = ({
                       ];
                     case "tradelocker":
                       return [
-                        {
-                          id: "S",
-                          name: "Standard Trading",
-                          desc: "Forex, indices, and commodities",
-                        },
+                        // {
+                        //   id: "S",
+                        //   name: "Standard Trading",
+                        //   desc: "Forex, indices, and commodities",
+                        // },
                       ];
                     case "metatrader4":
                     case "metatrader5":
@@ -1244,6 +1248,32 @@ const AccountConnectionModal: React.FC<BrokerConnectionModalProps> = ({
                               ?.name
                           }{" "}
                           account details)
+                        </p>
+                      </div>
+                    )}
+
+                    {selectedBroker !== "hankotrade" && (
+                      <div>
+                        <label className="block text-sm font-medium text-gray-300 mb-2">
+                          Account ID *
+                        </label>
+                        <input
+                          type="text"
+                          value={formData.accountId}
+                          onChange={(e) =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              accountId: e.target.value,
+                            }))
+                          }
+                          placeholder={`Your ${
+                            forexBrokers.find((b) => b.id === selectedBroker)
+                              ?.name
+                          } account ID`}
+                          className="w-full px-4 py-3 bg-gray-900/60 border border-blue-500/30 text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        />
+                        <p className="text-xs text-gray-500 mt-2">
+                          Your specific account ID for trading (if applicable)
                         </p>
                       </div>
                     )}

@@ -26,6 +26,7 @@ export function useLogs(accountId: string) {
   const [filter, setFilter] = useState<"all" | "S" | "E" >("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const filteredLogs = logs.filter((log) => {
     const matchesFilter = filter === "all" || log.status === filter;
@@ -39,40 +40,48 @@ export function useLogs(accountId: string) {
     return matchesFilter && matchesSearch;
   });
     
-    const getLogs = async () => {
-        if (!whopUser || !accountId) return;
-        setIsLoading(true)
+  const getLogs = async () => {
+    if (!whopUser || !accountId) return;
+    setIsLoading(true);
 
-        const alerts = await getAlertsByUserAndAccountId(whopUser.id, accountId)
+    try {
 
-        const rlogs = alerts.map((alert: Alert) => { 
-            const alertData:AlertData = extractAlertData(alert.title!)
-            const log: LogEntry = {
-                id: alert.id,
-                timestamp: new Date(alert.createdAt!).toISOString(),
-                status: alert.status!,
-                alertMessage: alert.title!,
-                responseMessage: alert.message!,
-                executionTime: alert.executionTime!,
-                symbol: alertData.Asset!,
-                side: alertData.Type!,
-                quantity:alertData.Volume ? alertData.Volume.toString() : "",
-            }
+      const alerts = await getAlertsByUserAndAccountId(whopUser.id, accountId)
 
-            return log
-        })
-        setLogs(rlogs)
-        setIsLoading(false)
+      const rlogs = alerts.map((alert: Alert) => {
+        const alertData: AlertData = extractAlertData(alert.title!)
+        const log: LogEntry = {
+          id: alert.id,
+          timestamp: new Date(alert.createdAt!).toISOString(),
+          status: alert.status!,
+          alertMessage: alert.title!,
+          responseMessage: alert.message!,
+          executionTime: alert.executionTime!,
+          symbol: alertData.Asset!,
+          side: alertData.Type!,
+          quantity: alertData.Volume ? alertData.Volume.toString() : "",
+        }
+
+        return log
+      })
+      setLogs(rlogs)
+    } catch (err: any) {
+      console.error('Error fetching logs:', err);
+      setError(err.message || "Failed to fetch logs.");
+    } finally {
+      setIsLoading(false);
+    }
   }
 
     return {
       logs,
-        filter,
+      filter,
         setFilter,
         isLoading,
         filteredLogs,
         searchTerm,
         setSearchTerm,
         getLogs,
+        error,
   }
 }

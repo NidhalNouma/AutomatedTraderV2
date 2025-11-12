@@ -22,12 +22,14 @@ export class TradeLockerClient {
     password?: string,
     server?: string,
     type?: string,
+    accountId?: string
    ) {
       if (account) {
           this.username = account.accountNumber
           this.password = account.accountPassword
           this.server = account.accountPass
           this.type = account.accountType
+          this.accountId = account.accountId
           
           this.account = account
       }
@@ -36,6 +38,7 @@ export class TradeLockerClient {
         this.password = password
         this.server = server
         this.type = type
+        this.accountId = accountId
       }
 
     const environmentUrl = (["l", "live"].includes(this.type!.toLowerCase())) 
@@ -52,7 +55,6 @@ export class TradeLockerClient {
         password: this.password,
         server: this.server,
       };
-      console.log(body);
       const res = await axios.post(`${this.baseUrl}/backend-api/auth/jwt/token`, body);
       
       const data = res.data as {
@@ -89,10 +91,21 @@ export class TradeLockerClient {
       firstId: []
     }
 
-    if (accounts.length > 0){
-      r.firstId = accounts[0].id
-      r.currency = accounts[0].currency
-      r.accNum = accounts[0].accNum
+    if (accounts.length > 0) {
+      if (!this.accountId) {
+        r.firstId = accounts[0].id
+        r.currency = accounts[0].currency
+        r.accNum = accounts[0].accNum
+      } else {
+        const selectedAccount = accounts.find(acc => acc.id.toString() === this.accountId);
+        if (selectedAccount) {
+          r.firstId = selectedAccount.id
+          r.currency = selectedAccount.currency
+          r.accNum = selectedAccount.accNum
+        } else {
+          throw new Error(`Account ID ${this.accountId} not found.`);
+        }
+      }
     }
 
     return r
@@ -103,10 +116,11 @@ export class TradeLockerClient {
     username: string,
     password: string,
     server: string,
-    type: string
+    type: string,
+    accountId?: string
   ) {
     try {
-      const client = new TradeLockerClient(undefined, username, password, server, type);
+      const client = new TradeLockerClient(undefined, username, password, server, type, accountId);
       await client.login();
 
       if (client.accountId) {

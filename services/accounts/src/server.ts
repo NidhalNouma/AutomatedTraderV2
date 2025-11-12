@@ -21,13 +21,13 @@ app.get("/", (req: Request, res: Response) => {
 
 app.post("/check", async (req: Request, res: Response) => {
   try {
-    const { broker, val1, val2, val3, type } = req.body;
+    const { broker, val1, val2, val3, val4, type } = req.body;
       if (broker === 'tradelocker') {
           if (!val1 || !val2 || !val3 || !type) {
               return res.status(400).json({ error: "Missing required fields" });
       }
-              
-      const result = await TradeLockerClient.checkCredentials(val1, val2, val3, type);
+
+      const result = await TradeLockerClient.checkCredentials(val1, val2, val3, type, val4);
       console.log(result)
       return res.json(result);
     } else if (broker === 'hankotrade') {

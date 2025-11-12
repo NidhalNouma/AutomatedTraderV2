@@ -523,13 +523,13 @@ const AlertPlaygroundPage: React.FC = () => {
                           Long SL
                         </span>
                         <code className="flex-1 text-xs font-mono text-red-300 min-w-0 overflow-x-auto">
-                          X=Sell A={config.assetName || "{{ticker}}"} P=100 ID=
+                          X=BUY A={config.assetName || "{{ticker}}"} P=100 ID=
                           {config.idValue || "{{id}}"}
                         </code>
                         <button
                           onClick={() =>
                             copyToClipboard(
-                              `X=Sell A=${
+                              `X=BUY A=${
                                 config.assetName || "{{ticker}}"
                               } P=100 ID=${config.idValue || "{{id}}"}`
                             )
@@ -545,13 +545,13 @@ const AlertPlaygroundPage: React.FC = () => {
                           Short SL
                         </span>
                         <code className="flex-1 text-xs font-mono text-red-300 min-w-0 overflow-x-auto">
-                          X=Buy A={config.assetName || "{{ticker}}"} P=100 ID=
+                          X=SELL A={config.assetName || "{{ticker}}"} P=100 ID=
                           {config.idValue || "{{id}}"}
                         </code>
                         <button
                           onClick={() =>
                             copyToClipboard(
-                              `X=Buy A=${
+                              `X=SELL A=${
                                 config.assetName || "{{ticker}}"
                               } P=100 ID=${config.idValue || "{{id}}"}`
                             )

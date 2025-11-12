@@ -34,6 +34,7 @@ const LogsModal: React.FC<LogsModalProps> = ({
     searchTerm,
     setSearchTerm,
     getLogs,
+    error,
   } = useLogs(accountId);
   useEffect(() => {
     if (isOpen) {
@@ -161,6 +162,12 @@ const LogsModal: React.FC<LogsModalProps> = ({
             <div className="text-center py-12">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-400 mx-auto mb-4"></div>
               <p className="text-gray-400">Loading logs...</p>
+            </div>
+          ) : error ? (
+            <div className="text-center py-12">
+              <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
+              <p className="text-red-400 text-lg mb-2">Error</p>
+              <p className="text-red-300 text-sm">{error}</p>
             </div>
           ) : filteredLogs.length === 0 ? (
             <div className="text-center py-12">

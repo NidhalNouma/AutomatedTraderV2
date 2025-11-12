@@ -59,6 +59,7 @@ export const AccountProvider: React.FC<AccountProviderProps> = ({
     val1: string,
     val2: string,
     val3: string,
+    val4: string,
     type: string
   ) => {
     if (!whopUser) return;
@@ -73,6 +74,7 @@ export const AccountProvider: React.FC<AccountProviderProps> = ({
         accountNumber: val1,
         accountPassword: val2,
         accountPass: val3 || "",
+        accountId: val4 || "",
         accountType: type,
       };
       const newAccount = await addAccountDb(acc);

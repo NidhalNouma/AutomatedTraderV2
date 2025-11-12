@@ -21,7 +21,8 @@ async function checkAccount(account: Account) {
       type: account.accountType,
       val1: account.accountNumber,
       val2: account.accountPassword,
-      val3: account.accountPass
+      val3: account.accountPass,
+      val4: account.accountId,
     }) as any
     if(check?.data?.valid) return check.data.valid
 
