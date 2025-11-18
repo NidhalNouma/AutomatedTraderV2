@@ -13,7 +13,7 @@ export interface LogEntry {
   responseMessage: string;
   executionTime: number;
   symbol: string;
-  side: "BUY" | "SELL";
+  side: "BUY" | "SELL" | "";
   quantity: string;
   price?: number;
 }
