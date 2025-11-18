@@ -1,5 +1,6 @@
 import axios from "axios";
 import { type Account, type Trade, type ClosedTrade } from "../types";
+import { retryUntilResponse } from "../../utils";
 
 export class TradeLockerClient {
   private baseUrl: string;
@@ -165,12 +166,23 @@ export class TradeLockerClient {
       const orderId = orderResData?.orderId;
       if (!orderId) throw new Error("Failed to open trade.");
 
-      const order = await this.getOrder(orderId, instrumentId)
+      // const order = await this.getOrder(orderId, instrumentId)
+      const order = await retryUntilResponse(
+        () => this.getOrder(orderId, instrumentId),
+        (res: any) => res !== null && res !== undefined,
+        [],
+        5,
+        3
+      );
+
+      // console.log("Order details:", order);
       
       const positionId = order?.positionId ?? ''
+      // console.log("Position ID:", positionId);
       if (!positionId) throw new Error("Order placed but failed to retrieve position ID.");
       
       const positions = await this.getOpenPosition()
+      // console.log(positions)
       
       const position = positions.find(pos => pos.id === positionId)
       if (!position) throw new Error("Order placed but failed to retrieve position details.");
@@ -237,7 +249,14 @@ export class TradeLockerClient {
 
       const exeTime = Date.now() - startTime;
 
-      const positions = await this.getClosedPositionsById(trade.tradeId);
+      // const positions = await this.getClosedPositionsById(trade.tradeId);
+      const positions = await retryUntilResponse(
+        () => this.getClosedPositionsById(trade.tradeId),
+        (res: any) => res !== null && res !== undefined && res.length > 0,
+        [],
+        5,
+        3000
+      );
       // console.log(positions)
 
       const closedTrades:ClosedTrade[] = positions.map((pos:any) => {
