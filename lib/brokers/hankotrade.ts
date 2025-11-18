@@ -337,6 +337,15 @@ export class HankoTradeBroker {
         volumeToClose = this.setQuantitySize(volumeToClose, minContractSize, contractSizeDigits);
       }
 
+      const trade = await this.getOpenTrade(oTrade.symbol, oTrade.tradeId!);
+      if (!trade) {
+        throw new Error(`Open trade with ID ${oTrade.tradeId} not found for closing.`);
+      }
+
+      if (volumeToClose > Number(trade.qty)) {
+        volumeToClose = Number(trade.qty);
+      }
+
       // console.log(`Volume to close: ${oTrade.tradeId}, ${oTrade.symbol}, ${oTrade.contractSizeDigits} => ${volumeToClose}`);
 
 

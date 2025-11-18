@@ -17,6 +17,10 @@ export function extractAlertData(alertMessage: string): AlertData {
    * into:
    *  ["D=BUY", "A=BTC-PERP INTX", "V=10", "ID=4", "SR=1"]
    */
+
+  if (!alertMessage || typeof alertMessage !== "string" || alertMessage.trim() === "") {
+    return data;
+  }
   const pattern = /([A-Z]+=.*?)(?=\s+[A-Z]+=|$)/g;
   const parts = alertMessage.match(pattern) || [];
 

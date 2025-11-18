@@ -57,8 +57,8 @@ export function useLogs(accountId: string) {
           alertMessage: alert.title!,
           responseMessage: alert.message!,
           executionTime: alert.executionTime!,
-          symbol: alertData.Asset!,
-          side: alertData.Type!,
+          symbol: alertData.Asset ?? "",
+          side: alertData.Type ?? "",
           quantity: alertData.Volume ? alertData.Volume.toString() : "",
         }
 
