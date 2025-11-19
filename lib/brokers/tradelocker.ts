@@ -234,6 +234,12 @@ export class TradeLockerClient {
       if(partial) quantity = trade.volume * partial / 100;
       if(quantity > trade.remainingVolume) quantity = trade.remainingVolume;
 
+      const tPositions = await this.getOpenPosition()
+      const position = tPositions.find(pos => pos.id === trade.tradeId)
+
+      if (!position) throw new Error("Position not found.");
+      if (quantity > position.qty) quantity = position.qty;
+
       if (quantity < 0.01) throw new Error("Quantity must be greater than 0.01.");
 
       // console.log(trade, partial, quantity)
